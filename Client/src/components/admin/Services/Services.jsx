@@ -1,0 +1,127 @@
+import React, { useEffect, useState } from 'react'
+import AddServiceModel from '../addUser/addServices'
+import Deleteservice from '../../comfirmations/Deleteservice'
+import axios from "axios";
+import { MdDelete, MdEdit } from 'react-icons/md'
+import { useDispatch, useSelector } from 'react-redux'
+import { ServiceAction } from '../../../redux/action/serviceAction'
+import './Services.css'
+
+function Services() {
+    const [showModal, setShowModal] = useState(false)
+    const APIURL = useSelector(state => state.APIURL.url)
+    const dispatch = useDispatch()
+    const [services, setServices] = useState([])
+    const service = useSelector(state => state.Service)
+    const [deleteServiceId, setDeleteServiceId] = useState('');
+
+    const handleDelete = (serviceId) => {
+        setDeleteServiceId(serviceId);
+        setShowDeleteModal(true);
+    };
+
+    const toggleModal = () => {
+        setShowModal(!showModal)
+    }
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    console.log(service);
+    useEffect(() => {
+        axios.get(`${APIURL}/admin/getServices/`).then(response => {
+            setServices(response.data)
+        })
+    }, [])
+
+
+    const handleEdit = (serviceId) => {
+        // Perform edit operation here, e.g., navigate to edit page or show a modal
+    };
+
+    return (
+        <div>
+            <div className="flex flex-col mx-auto max-w-screen-lg mt-10" >
+
+                <div className="flex justify-between items-center mb-4 px-6 md:px-0">
+                    <div className="relative z-[-1]">
+
+                        <input
+                            type="text"
+                            className="py-2 px-4 w-full md:w-72 border border-gray-400 rounded-lg pr-10 placeholder-gray-500 text-gray-900 focus:outline-none focus:border-blue-900"
+                            placeholder="Search..."
+                        />
+                        <div className="absolute inset-y-0 right-0 flex items-center px-2">
+                            <svg
+                                className="fill-current h-4 w-4 text-gray-500"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 20 20"
+                            >
+                                <path d="M18.56 16.44l-3.76-3.78a6.77 6.77 0 1 0-.86.86l3.78 3.76a.61.61 0 0 0 .86 0 .61.61 0 0 0 0-.84zM6.5 12.5a5 5 0 1 1 7.08 0A5 5 0 0 1 6.5 12.5z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <button
+                        className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={toggleModal}
+                    >
+                        Add Service
+                    </button>
+                </div>
+                <div className="overflow-x-auto">
+                    <table className="table-auto w-full ">
+                        <thead className='text-white'>
+                            <tr className='bg-blue-900'>
+                                <th className="px-4 py-2">Image</th>
+
+                                <th className="px-4 py-2">Name</th>
+                                <th className="px-4 py-2">Description</th>
+                                <th className="px-4 py-2">Service Includes</th>
+
+                                <th className="px-4 py-2">Price</th>
+                                <th className="px-4 py-2">Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody >
+                            {services.map(item => (
+                                <tr key={item._id}>
+                                    <td className="border px-4 py-2"><img className='w-[100px]' src={`http://localhost:8080/public/images/${item.image}`} alt="" /></td>
+                                    <td className="border px-4 py-2">{item.servicename}</td>
+                                    <td className="border px-4 py-2">{item.description}</td>
+                                    <td className="border px-4 py-2">{item.serviceincludes}</td>
+                                    <td className="border px-4 py-2">{item.price}</td>
+                                    <td className="border px-4 py-2">
+                                        <span style={{ display: 'flex', alignItems: 'center' }}>
+                                            <MdDelete size={22} color="red" className="me-5" onClick={() => handleDelete(item._id)} />
+                                            <MdEdit color="green" size={22} onClick={() => handleEdit(item._id)} />
+                                        </span>
+                                    </td>
+                                </tr>))}
+                        </tbody>
+                    </table>
+
+                    {showModal && (
+                        <div className="modal-overlay">
+                            <AddServiceModel title="Add Service" onClose={toggleModal}>
+                            </AddServiceModel>
+                        </div>
+
+
+                    )}
+                    {showDeleteModal && (
+                        <div className="modal-overlay">
+                            <Deleteservice
+                                open={setShowDeleteModal}
+                                serviceId={deleteServiceId}
+                            />
+                        </div>
+                    )}
+
+                </div>
+
+            </div>
+
+        </div>
+    )
+}
+
+export default Services

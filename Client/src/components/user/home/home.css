@@ -1,0 +1,12 @@
+.navbar {
+  display: flex;
+  position: sticky;
+  top: 0;
+  justify-content: space-between;
+  background: linear-gradient(45deg, #000235, #020073);
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #000235, #020073);
+
+}
