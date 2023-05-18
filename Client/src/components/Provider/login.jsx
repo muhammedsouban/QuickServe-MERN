@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
-import './login.css'
+import '../admin/Login/login.css'
 
-function AdminLogin() {
+function ProviderLogin() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
@@ -12,11 +12,11 @@ function AdminLogin() {
     e.preventDefault();
 
     try {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      const response = await axios.post(`http://localhost:8080/admin/login`, { email, password }, { headers });
+      const response = await axios.post(`http://localhost:8080/provider/login`, { email, password });
       if (response.data && response.data.email) {
+        console.log(response.data.token);
         localStorage.setItem('token', response.data.token);
-        navigate('/admin/adminHome');
+        navigate('/provider/');
       } else {
         alert(response.data.message);
       }
@@ -27,8 +27,18 @@ function AdminLogin() {
 
   return (
     <>
+    <div className='navbar flex justify-between items-center p-4 text-white'>
+    <div className='flex  items-center'>
+    <h1 className='text-2xl sm:text-3xl lg:text-4xl px-2'>
+        Quick <span className='font-bold'>Serve</span>
+      </h1>
+    </div>
+      <h1 className= 'text-yellow-400 text-2xl sm:text-2xl lg:text-4xl px-2'>
+        Provider <span className='font-bold'>PANEL</span>
+      </h1>
+    </div>
       <div className="center1 max-w-[500px] w-full">
-          <h1 className='text-2xl text-center'>Admin Login</h1>
+          <h1 className='text-2xl text-center'>Provider Login</h1>
         <form onSubmit={handleSubmit}>
           <div className="txt_field1">
             <input
@@ -63,4 +73,4 @@ function AdminLogin() {
   );
 }
 
-export default AdminLogin;
+export default ProviderLogin;

@@ -26,7 +26,7 @@ function Sidebar() {
               Dashboard
             </li>
           </NavLink>
-          <NavLink to={'/admin/providers'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/admin/provider'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
               <BsPersonGear size={25} className='mr-4 ml-4' />
               Providers

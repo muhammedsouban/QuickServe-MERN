@@ -15,7 +15,6 @@ const [service,setService]=useState([])
   };
 
   const APIURL = useSelector((state) => state.APIURL.url);
-  const dispatch = useDispatch();
   const handleGoBack = () => {
     onClose();
   };

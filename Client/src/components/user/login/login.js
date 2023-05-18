@@ -2,7 +2,6 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import {UserLoginAction} from '../../../redux/action/UserLoginAction'
 
 function Login() {
   const login = useSelector(state => state.UserLogin)
@@ -19,7 +18,7 @@ const handleSubmit = async (e) => {
 
     try {
       const headers={Authorization:`Bearer ${localStorage.getItem('token')}`}
-        const response = await axios.post(`${APIURL}/login/`, login,{headers})
+        const response = await axios.post(`http://localhost:8080/login/`, login,{headers})
         if (response.data.userData && response.data.userData.email) {
           localStorage.setItem('token', response.data.token)
             navigate('/')

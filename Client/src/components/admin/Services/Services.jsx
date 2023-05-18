@@ -3,16 +3,13 @@ import AddServiceModel from '../addUser/addServices'
 import Deleteservice from '../../comfirmations/Deleteservice'
 import axios from "axios";
 import { MdDelete, MdEdit } from 'react-icons/md'
-import { useDispatch, useSelector } from 'react-redux'
-// import { ServiceAction } from '../../../redux/action/serviceAction'
+
 import './Services.css'
 
 function Services() {
     const [showModal, setShowModal] = useState(false)
-    const APIURL = useSelector(state => state.APIURL.url)
-    const dispatch = useDispatch()
     const [services, setServices] = useState([])
-    const service = useSelector(state => state.Service)
+    
     const [deleteServiceId, setDeleteServiceId] = useState('');
 
     const handleDelete = (serviceId) => {
@@ -25,11 +22,10 @@ function Services() {
     }
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    console.log(service);
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-    
+
     useEffect(() => {
-        axios.get(`${APIURL}/admin/getServices/`,{headers}).then(response => {
+        axios.get(`http://localhost:8080/admin/getServices/`, { headers }).then(response => {
             setServices(response.data)
         })
     }, [])

@@ -1,8 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useState } from 'react';
-import { BiArrowBack } from 'react-icons/bi';
-// import { ServiceAction } from '../../redux/action/serviceAction';
+import { BiArrowBack,BiCamera } from 'react-icons/bi';
+import './register.css';
 
 const ProviderRegister = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -14,32 +13,51 @@ const ProviderRegister = ({ onClose }) => {
     setPreviewImage(URL.createObjectURL(image));
   };
 
-  const [service ,setService]= useState([]);
-  const APIURL = useSelector((state) => state.APIURL.url);
-  const dispatch = useDispatch();
+  const [provider, setProvider] = useState({
+    username: '',
+    email: '',
+    phone: '',
+    location: '',
+    address: '',
+    pincode: '',
+    category: '',
+    experience: '',
+    availability: '',
+    languages: '',
+    description: '',
+    password: '',
+    CPassword: ''
+  });
+
   const handleGoBack = () => {
     onClose();
   };
+
   const onChange = (e) => {
-    setService(e.target.name, e.target.value);
+    setProvider({ ...provider, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
       formData.append('image', selectedImage);
-      formData.append('firstName', service.firstName);
-      formData.append('lastName', service.lastName);
-      formData.append('mobile', service.mobile);
-      formData.append('location', service.location);
-      formData.append('address', service.address);
-      formData.append('pincode', service.pincode);
-      formData.append('category', service.category);
-      formData.append('experience', service.experience);
-      formData.append('availability', service.availability);
-      formData.append('languages', service.languages);
-      formData.append('description', service.description);
-      const response = await axios.post(`${APIURL}/provider/register`, formData);
+      formData.append('username', provider.username);
+      formData.append('email', provider.email);
+      formData.append('phone', provider.phone);
+      formData.append('location', provider.location);
+      formData.append('address', provider.address);
+      formData.append('pincode', provider.pincode);
+      formData.append('category', provider.category);
+      formData.append('experience', provider.experience);
+      formData.append('availability', provider.availability);
+      formData.append('languages', provider.languages);
+      formData.append('description', provider.description);
+      formData.append('password', provider.password);
+
+
+      const response = await axios.post('http://localhost:8080/provider/register', formData);
+
       if (response.data) {
         window.location.reload();
       } else {
@@ -52,9 +70,9 @@ const ProviderRegister = ({ onClose }) => {
   };
 
   return (
-    <div>
-      <div className="center bg-white max-w-[800px] sm:w-1/2 z-50 mx-auto px-4 sm:px-0">
-        <div className="flex justify-between items-center mb-6">
+    <div className="Register-container">
+      <div className="Register-center rounded-sm max-w-[800px] z-50 px-4 sm:px-0">
+        <div className="flex justify-between items-center mb-5">
           <button className="top-0 relative left-5" onClick={handleGoBack}>
             <BiArrowBack size={20} />
           </button>
@@ -62,62 +80,125 @@ const ProviderRegister = ({ onClose }) => {
           <div></div>
         </div>
 
-
         <form onSubmit={handleSubmit}>
-          <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="floating_first_name" id="floating_first_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_first_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Username</label>
+          <div className="mb-4">Personal Details</div>
+          <div className="grid md:grid-cols-2 md:gap-6">
+            <div className="relative z-0 w-full mb-5 group">
+              <input
+                onChange={onChange}
+                value={provider.username}
+                type="text"
+                name="username"
+                id="floating_first_name"
+                className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                required
+              />
+              <label
+                htmlFor="floating_first_name"
+                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600"
+              >
+                Username
+              </label>
             </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="floating_last_name" id="floating_last_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Email</label>
-            </div>
-          </div>
-          <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="floating_first_name" id="floating_first_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_first_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Mobile No.</label>
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="floating_last_name" id="floating_last_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Location</label>
-            </div>
-          </div>
-          <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="floating_first_name" id="floating_first_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_first_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Permenent Address</label>
-            </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="floating_last_name" id="floating_last_name" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_last_name" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Pincode</label>
+            <div className="relative z-0 w-full mb-5 group">
+              <input onChange={onChange} value={provider.email} type="text" name="email" id="floating_last_name" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Email</label>
             </div>
           </div>
-          <div class="relative z-0 w-full mb-6 group">
-            <input type="email" name="floating_email" id="floating_email" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-            <label for="floating_email" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Email address</label>
+          <div className="grid md:grid-cols-3 md:gap-6">
+            <div className="relative z-0 w-full mb-5 group">
+              <input onChange={onChange} value={provider.phone} type="text" name="phone" id="floating_first_name" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_first_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Mobile No.</label>
+            </div>
+            <div className="relative z-0 w-full mb-5 group">
+              <input onChange={onChange} value={provider.location} type="text" name="location" id="floating_last_name" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Location</label>
+            </div>
+            <div className="relative z-0 w-full mb-5 group">
+              <input onChange={onChange} value={provider.pincode} type="text" name="pincode" id="floating_last_name" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_last_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Pincode</label>
+            </div>
           </div>
-          <div class="relative z-0 w-full mb-6 group">
-            <input type="password" name="floating_password" id="floating_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-            <label for="floating_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Password</label>
+          <div className="relative z-0 w-full mb-5 group">
+            <input onChange={onChange} value={provider.address} type="text" name="address" id="floating_first_name" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+            <label for="floating_first_name" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Permenent Address</label>
           </div>
-          <div class="relative z-0 w-full mb-6 group">
-            <input type="password" name="repeat_password" id="floating_repeat_password" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-            <label for="floating_repeat_password" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Confirm password</label>
+          <div className="grid md:grid-cols-2 md:gap-6">
+            <div className="relative z-0 w-full mb-5 group">
+              <input onChange={onChange} value={provider.password} type="password" name="password" id="floating_password" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Password</label>
+            </div>
+            <div className="relative z-0 w-full mb-5 group">
+              <input onChange={onChange} value={provider.CPassword} type="password" name="Cpassword" id="floating_repeat_password" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "  />
+              <label for="floating_repeat_password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Confirm password</label>
+            </div>
           </div>
 
-          <div class="grid md:grid-cols-2 md:gap-6">
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" name="floating_phone" id="floating_phone" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_phone" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Phone number (123-456-7890)</label>
+          <div className='mb-4'>job Details</div>
+          
+          <div className="grid md:grid-cols-2 md:gap-6">
+            <div className="relative z-0 w-full  group mb-4">
+              <input onChange={onChange} value={provider.category} type="text" name="category" id="floating_phone" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Category</label>
             </div>
-            <div class="relative z-0 w-full mb-6 group">
-              <input type="text" name="floating_company" id="floating_company" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_company" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Company (Ex. Google)</label>
+            <div className="relative z-0 w-full group mb-4">
+              <input onChange={onChange} value={provider.experience} type="text" name="experience" id="floating_company" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_company" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Experience</label>
             </div>
+
+            <div className="relative z-0 w-full  group mb-4">
+              <input onChange={onChange} value={provider.availability} type="text" name="availability" id="floating_company" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_company" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Availability</label>
+            </div>
+            <div className="relative z-0 w-full  group mb-4">
+              <input onChange={onChange} value={provider.languages} type="text" name="languages" id="floating_company" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_company" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Known Language</label>
+            </div>
+
+            <div className="relative z-0 w-full  group mb-4">
+              <input onChange={onChange} value={provider.description} type="text" name="description" id="floating_company" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <label for="floating_company" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Job Description</label>
+            </div>
+            <div className="relative z-0 w-full  group mb-4">
+            
+          <div className="mb-5 flex items-center">
+            <label htmlFor="profile_image" className="cursor-pointer">
+              <input
+                onChange={handleImageChange}
+                type="file"
+                id="profile_image"
+                accept="image/*"
+                className="sr-only"
+              />
+              <div className="flex items-center">
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="w-12 h-12 object-cover rounded-full"
+                  />
+                ) : (
+                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-gray-500">
+                      <BiCamera size={20} />
+                    </span>
+                  </div>
+                )}
+                <span className="ml-3">Upload Image</span>
+              </div>
+            </label>
           </div>
-          <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 mb-5 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+          </div>
+          </div>
+          <div className="flex justify-center mt-6">
+            <button
+              type="submit"
+              className="w-full px-6 py-2 rounded bg-blue-950 text-white hover:bg-blue-700"
+            >
+              Register
+            </button>
+          </div>
         </form>
       </div>
     </div>

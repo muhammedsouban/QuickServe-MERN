@@ -3,14 +3,13 @@ import { useEffect } from "react";
 // import { Link, useNavigate } from "react-router-dom";
 import '../../../components/user/home/home.css'
 import axios from "axios";
-import { useSelector } from 'react-redux'
 import Navbar from "../Navbar/Navbar";
 import Hero from "../Hero/hero";
 import ServiceCard from "../servicecard";
 import CategorySlider from "../Categorylist";
 
 function Home() {
-  const APIURL = useSelector(state => state.APIURL.url)
+  
 
   // useEffect(() => {
   //   const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` }

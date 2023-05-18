@@ -9,7 +9,7 @@ const Navbar = () => {
   const [nav, setNav] = useState(false)
 
   return (
-    <div className='sticky navbar flex justify-between items-center p-4 text-white'>
+    <div className='fixed top-0 navbar flex justify-between items-center p-4 text-white z-10'>
       <div className='flex  items-center'>
         <h1 className='text-2xl sm:text-3xl lg:text-4xl px-2'>
           Quick <span className='font-bold'>Serve</span>

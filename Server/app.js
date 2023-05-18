@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import adminRoute from './routes/adminRoute.js';
 import userRoute from './routes/userRoute.js';
+import providerRoute from './routes/providerRoute.js';
 
 dotenv.config();
 
@@ -40,6 +41,8 @@ app.get('/', (req, res) => {
 
 app.use('/', userRoute);
 app.use('/admin', adminRoute);
+app.use('/provider', providerRoute);
+
 
 app.listen(PORT, () => {
   console.log(`Server connected to http://localhost:${PORT}`);

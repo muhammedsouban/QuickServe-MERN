@@ -6,12 +6,10 @@ export const verifyToken = (req, res, next) => {
         if (!authHeader) {
             return res.status(401).json({ error: "No token provided" });
         }
-
         const token = authHeader.split(" ")[1];
         if (!token) {
             return res.status(401).json({ error: "No token provided" });
         }
-
         jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
             if (err) {
                 return res.status(401).json({ error: "Invalid token" });
@@ -26,6 +24,22 @@ export const verifyToken = (req, res, next) => {
 };
 
 export const verifyAdminToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
+            if (err) {
+                res.json('unauthorized');
+            }
+            req.user = decoded;
+            next();
+        });
+    } else {
+        res.json('unauthorized');
+    }
+};
+
+export const verifyProviderToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (authHeader) {
         const token = authHeader.split(' ')[1];
