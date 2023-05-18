@@ -1,68 +1,70 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { MdPerson, MdCategory, MdMiscellaneousServices, MdOutlineLogout } from 'react-icons/md';
-import { BsPersonGear } from 'react-icons/bs';
+import { MdPerson, MdCategory, MdPendingActions,MdOutlineDoneAll, MdOutlineLogout,MdNotificationsActive } from 'react-icons/md';
 import { RiDashboardFill } from 'react-icons/ri';
-import { GoFileMedia } from 'react-icons/go';
 import { AiOutlineCalendar } from 'react-icons/ai';
+import { BsPatchQuestionFill } from 'react-icons/bs';
 
 function Sidebar() {
 
   const handleNavLinkFocus = (event) => {
     event.target.style.color = 'yellow';
+
   };
 
   const handleNavLinkBlur = (event) => {
     event.target.style.color = 'inherit';
+
   };
 
   return (
     <div className={'sidebar fixed top-13 left-0 w-[300px] h-screen text-white bg-blue-900 duration-300'}>
-      <nav>
+      <nav className='mt-12 ms-4' >
         <ul className='flex flex-col  text-white'>
-          <NavLink to={'/admin/dashboard'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/provider/dashboard'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
               <RiDashboardFill size={25} className='mr-4 ml-4' />
               Dashboard
             </li>
           </NavLink>
-          <NavLink to={'/admin/providers'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          {/* <NavLink to={'/provider/providers'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
               <BsPersonGear size={25} className='mr-4 ml-4' />
               Providers
             </li>
-          </NavLink>
-          <NavLink to={'/admin/users'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          </NavLink> */}
+          <NavLink to={'/provider/profile'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
               <MdPerson size={25} className='mr-4 ml-4' />
-              Users
+              Profile
             </li>
           </NavLink>
-          <NavLink to={'/admin/categories'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/provider/categories'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}  >
             <li className='text-xl py-4 flex'>
-              <MdCategory size={25} className='mr-4 ml-4' />
-              Categories
+              <BsPatchQuestionFill size={25} className='mr-4 ml-4' />
+              Requests
             </li>
           </NavLink>
-          <NavLink to={'/admin/service'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/provider/service'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
-              <MdMiscellaneousServices size={25} className='mr-4 ml-4' />
-              Services
+              <MdPendingActions size={25} className='mr-4 ml-4' />
+              Pending
             </li>
           </NavLink>
-          <NavLink to={'/admin/media'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+       
+          <NavLink to={'/provider/bookings'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
-              <GoFileMedia size={25} className='mr-4 ml-4' />
-              Media
+              <MdOutlineDoneAll size={25} className='mr-4 ml-4' />
+              Completed
             </li>
           </NavLink>
-          <NavLink to={'/admin/bookings'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/provider/notification'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
-              <AiOutlineCalendar size={25} className='mr-4 ml-4' />
-              Bookings
+              <MdNotificationsActive size={25} className='mr-4 ml-4' />
+              Notifications
             </li>
           </NavLink>
-          <NavLink to={'/admin/logout'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/provider/logout'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
               <MdOutlineLogout size={25} className='mr-4 ml-4' />
               Logout

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { TbTruckDelivery } from 'react-icons/tb'
 import { FaWallet } from 'react-icons/fa'
@@ -20,7 +21,7 @@ const Navbar = () => {
 
       {nav ? <div className='bg-black/80 fixed w-full h-screen z-10 top-0 left-0'></div> : ''}
       <div className=' sm:flex items-center  ms-5 p-1 text-[18px]'>
-        <MdBusiness color='red' size={25} className='hidden sm:flex'/> <p className='p-2 hidden sm:flex'>Register as profession</p>
+       <NavLink to={'/provider/register'}> <p className='p-2 hidden sm:flex'>Register as profession</p></NavLink> 
         <MdPerson size={25} className='ms-5 hidden sm:flex' /><p className='p-2 hidden sm:flex'>Login</p>
         <div onClick={() => setNav(!nav)} className='cursor-pointer ms-5 '>
           <AiOutlineMenu size={30} />

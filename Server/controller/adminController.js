@@ -8,13 +8,17 @@ export const adminLogin = async (req, res) => {
         const admin = await Admin.findOne({ email: req.body.email })
         if (admin) {
             const isPasswordValid = admin.password;
+            console.log(1);
             if (isPasswordValid === req.body.password) {
-                const token = jwt.sign({ email: admin.email }, 'myWebAppSecretKey123', { expiresIn: "180000" })
+                console.log(2);
+                const token = jwt.sign({ email: admin.email }, process.env.JWT_SECRET_KEY )
                 res.json({ message: "Login Sucess", token, email: admin.email, id: admin._id });
             } else {
+                console.log(3);
                 res.json({ message: "Wrong password" });
             }
         } else {
+            console.log(4);
             res.json({ message: "Wrong Email " });
         }
     } catch (error) {
@@ -77,23 +81,19 @@ export const UpdateUser = async (req, res) => {
 
 export const AddService = async (req, res) => {
     try {
-        const { servicename, description, serviceincludes, price } = req.body;
-
+        const { servicename, description, serviceincludes, price,category } = req.body;
         const serviceData = {
             servicename: servicename,
             description: description,
+            category:category,
             serviceincludes: serviceincludes,
             price: price,
         };
-
         if (req.file?.filename) {
             serviceData.image = req.file.filename;
         }
-
         const newService = new Service(serviceData);
         const savedService = await newService.save();
-
-        console.log(savedService);
         res.status(200).json(savedService);
 
     } catch (error) {

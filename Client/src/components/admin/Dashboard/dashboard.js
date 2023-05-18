@@ -1,7 +1,6 @@
 import React from 'react';
 import '../../../components/admin/Dashboard/dashboard.css';
-import Sidebar from '../sidebar/sidebar';
-import AdminNavbar from '../AdminNavbar/AdminNavbar';
+
 const Dashboard = () => {
   const Logout = () => {
     localStorage.clear();
@@ -9,8 +8,7 @@ const Dashboard = () => {
 
   return (
     <div >
-      <AdminNavbar />
-      <Sidebar />
+     This is admin Home
     </div>
   );
 };

@@ -8,5 +8,13 @@
 
 .sidebar {
   background: linear-gradient(180deg, #000235, #020073);
+  /* width: 300px; */
 
 }
+
+/* @media (max-width:400px){
+  .sidebar {
+    width: 50px;
+  
+  }
+} */

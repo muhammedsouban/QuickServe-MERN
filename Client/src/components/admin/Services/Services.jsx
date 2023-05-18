@@ -4,7 +4,7 @@ import Deleteservice from '../../comfirmations/Deleteservice'
 import axios from "axios";
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
-import { ServiceAction } from '../../../redux/action/serviceAction'
+// import { ServiceAction } from '../../../redux/action/serviceAction'
 import './Services.css'
 
 function Services() {
@@ -26,8 +26,10 @@ function Services() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     console.log(service);
+    const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+    
     useEffect(() => {
-        axios.get(`${APIURL}/admin/getServices/`).then(response => {
+        axios.get(`${APIURL}/admin/getServices/`,{headers}).then(response => {
             setServices(response.data)
         })
     }, [])
@@ -73,6 +75,8 @@ function Services() {
                                 <th className="px-4 py-2">Image</th>
 
                                 <th className="px-4 py-2">Name</th>
+                                <th className="px-4 py-2">Category</th>
+
                                 <th className="px-4 py-2">Description</th>
                                 <th className="px-4 py-2">Service Includes</th>
 
@@ -86,6 +90,8 @@ function Services() {
                                 <tr key={item._id}>
                                     <td className="border px-4 py-2"><img className='w-[100px]' src={`http://localhost:8080/public/images/${item.image}`} alt="" /></td>
                                     <td className="border px-4 py-2">{item.servicename}</td>
+                                    <td className="border px-4 py-2">{item.category}</td>
+
                                     <td className="border px-4 py-2">{item.description}</td>
                                     <td className="border px-4 py-2">{item.serviceincludes}</td>
                                     <td className="border px-4 py-2">{item.price}</td>

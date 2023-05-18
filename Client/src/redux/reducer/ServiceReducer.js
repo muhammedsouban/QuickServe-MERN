@@ -3,6 +3,7 @@ const initialstate ={
     description:"",
     image:"",
     serviceincludes:"",
+    category:'',
     price:""
 
 }

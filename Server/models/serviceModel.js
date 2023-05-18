@@ -10,6 +10,9 @@ const serviceSchema = mongoose.Schema({
   serviceincludes: {
     type: String,
   },
+  category: {
+    type: String,
+  },
   price: {
     type: Number,
   },

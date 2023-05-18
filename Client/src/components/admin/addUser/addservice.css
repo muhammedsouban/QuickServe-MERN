@@ -13,14 +13,6 @@ body {
     font-family: "Poppins", sans-serif;
   }
   
-  .sign {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(120deg, #2980b9, #8e44ad);
-    height: 100vh;
-    overflow: hidden;
-  }
-  
   body {
     margin: 0;
     padding: 0;
@@ -60,7 +52,16 @@ body {
   .txt_field input {
     width: 100%;
     padding: 5px 5px;
-    height: 40px;
+    height: 50px;
+    font-size: 16px;
+    border: none;
+    background: none;
+    outline: none;
+  }
+  .select-field{
+    width: 100%;
+    padding: 5px 5px;
+    height: 50px;
     font-size: 16px;
     border: none;
     background: none;
@@ -69,7 +70,7 @@ body {
   .txt_field textarea {
     width: 100%;
     padding: 5px 5px;
-    height: 40px;
+    height: 50px;
     font-size: 16px;
     border: none;
     background: none;
@@ -108,6 +109,10 @@ body {
     top: -10px;
     color:  rgb(30 58 138);
   }
+  .select-field:focus~label{
+    top: -10px;
+    color:  rgb(30 58 138);
+  }
   .txt_field input:focus~span::before,
   .txt_field input:valid~span::before {
     width: 100%;
@@ -117,61 +122,6 @@ body {
     width: 100%;
   }
   
-  form .txt_field1 {
-    position: relative;
-    border-bottom: 2px solid #adadad;
-    margin: 30px 0;
-  }
-  
-  form .txt_field2 {
-    position: relative;
-  
-    margin: 30px 0;
-  }
-  
-  .txt_field1 input {
-    width: 100%;
-    padding: 0 5px;
-    height: 40px;
-    font-size: 15px;
-    margin-top: 5px;
-    border: none;
-    background: none;
-    outline: none;
-  }
-  
-  .txt_field1 label {
-    position: absolute;
-    top: -30%;
-    left: 5px;
-    color: #adadad;
-    transform: translateY(-50%);
-    font-size: 16px;
-    pointer-events: none;
-    transition: .5s;
-  }
-  
-  .txt_field1 span::before {
-    content: '';
-    position: absolute;
-    top: 0px;
-    left: 0;
-    width: 0%;
-    height: 2px;
-    background:  rgb(30 58 138);
-    transition: .5s;
-  }
-  
-  .txt_field1 input:focus~label,
-  .txt_field1 input:valid~label {
-    top: -12px;
-    color:  rgb(30 58 138);
-  }
-  
-  /* .txt_field1 input:focus ~ span::before,
-  .txt_field1 input:valid ~ span::before{
-    width: 100%;
-  } */
   .pass {
     margin: -5px 0 20px 5px;
     color: #a6a6a6;

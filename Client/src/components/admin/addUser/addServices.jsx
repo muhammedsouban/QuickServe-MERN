@@ -2,27 +2,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useState } from 'react';
 import { BiArrowBack } from 'react-icons/bi'
-import { ServiceAction } from '../../../redux/action/serviceAction';
 import './addservice.css'
 
 const AddServiceModel = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-
+const [service,setService]=useState([])
   const handleImageChange = (e) => {
     const image = e.target.files[0];
     setSelectedImage(image);
     setPreviewImage(URL.createObjectURL(image));
   };
 
-  const service = useSelector((state) => state.Service);
   const APIURL = useSelector((state) => state.APIURL.url);
   const dispatch = useDispatch();
   const handleGoBack = () => {
     onClose();
   };
   const onChange = (e) => {
-    dispatch(ServiceAction(e.target.name, e.target.value));
+    setService(e.target.name, e.target.value);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,10 +28,13 @@ const AddServiceModel = ({ onClose }) => {
       const formData = new FormData();
       formData.append('image', selectedImage);
       formData.append('servicename', service.servicename);
+      formData.append('category', service.category);
       formData.append('description', service.description);
       formData.append('serviceincludes', service.serviceincludes);
       formData.append('price', service.price);
-      const response = await axios.post(`${APIURL}/admin/Add-Service/`, formData);
+      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
+
+      const response = await axios.post(`${APIURL}/admin/Add-Service/`, formData, { headers });
       if (response.data) {
         window.location.reload()
       } else {
@@ -70,7 +71,15 @@ const AddServiceModel = ({ onClose }) => {
             />
             <label>Service Name</label>
           </div>
-
+          <div className="txt_field">
+            <select className='select-field' value={service.category} name='category' onChange={onChange}>
+              <option disabled value="">Choose Category</option> {/* Empty default option */}
+              <option value="Plumber">Plumber</option>
+              <option value="Carpenter">Carpenter</option>
+              <option value="Barber">Barber</option>
+            </select>
+            {/* <label>Category</label> */}
+          </div>
           <div className="txt_field">
             <textarea
               title="Please enter description"
