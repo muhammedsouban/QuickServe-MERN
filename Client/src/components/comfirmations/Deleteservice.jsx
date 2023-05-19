@@ -6,10 +6,9 @@ function Deleteservice({open,serviceId}) {
     const close = () => {
         open(false);
     };
-
+    const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
     const Delete = () => {
-        console.log(serviceId);
-        const res = axios.delete(`http://127.0.0.1:8080/admin/deleteService/${serviceId}`);
+        const res = axios.delete(`http://127.0.0.1:8080/admin/deleteService/${serviceId}`,headers);
         if (res) {
             open(false);
             window.location.reload()

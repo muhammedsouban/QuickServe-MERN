@@ -2,7 +2,7 @@ import React from 'react'
 
 function AdminNavbar() {
   return (
-    <div className='navbar flex justify-between items-center p-4 text-white'>
+    <div className='navbar flex justify-between items-center p-4 text-white z-0'>
     <div className='flex  items-center'>
       <h1 className='text-2xl sm:text-3xl lg:text-4xl px-2'>
         ADMIN <span className='font-bold'>PANEL</span>

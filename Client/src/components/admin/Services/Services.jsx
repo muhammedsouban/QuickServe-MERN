@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import AddServiceModel from '../addUser/addServices'
+import AddServiceModel from '../Service/addServices'
 import Deleteservice from '../../comfirmations/Deleteservice'
+import EditServiceModel from '../Service/editService';
 import axios from "axios";
 import { MdDelete, MdEdit } from 'react-icons/md'
 
@@ -8,6 +9,11 @@ import './Services.css'
 
 function Services() {
     const [showModal, setShowModal] = useState(false)
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [EditServiceId, setEditServiceId] = useState('');
+
+
     const [services, setServices] = useState([])
     
     const [deleteServiceId, setDeleteServiceId] = useState('');
@@ -20,10 +26,8 @@ function Services() {
     const toggleModal = () => {
         setShowModal(!showModal)
     }
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-
     useEffect(() => {
         axios.get(`http://localhost:8080/admin/getServices/`, { headers }).then(response => {
             setServices(response.data)
@@ -32,8 +36,8 @@ function Services() {
 
 
     const handleEdit = (serviceId) => {
-        // Perform edit operation here, e.g., navigate to edit page or show a modal
-    };
+        setEditServiceId(serviceId);
+        setShowEditModal(true);    };
 
     return (
         <div>
@@ -114,6 +118,14 @@ function Services() {
                             <Deleteservice
                                 open={setShowDeleteModal}
                                 serviceId={deleteServiceId}
+                            />
+                        </div>
+                    )}
+                     {showEditModal && (
+                        <div className="modal-overlay">
+                            <EditServiceModel
+                                open={setShowEditModal}
+                                serviceId={EditServiceId}
                             />
                         </div>
                     )}

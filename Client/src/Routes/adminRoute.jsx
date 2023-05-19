@@ -4,17 +4,17 @@ import AdminNavbar from "../components/admin/AdminNavbar/AdminNavbar";
 import Sidebar from "../components/admin/sidebar/sidebar";
 import Dashboard from "../components/admin/Dashboard/dashboard";
 import ProviderCard from "../components/admin/ProviderList";
+import Category from "../components/admin/Category";
 function AdminRoute() {
     return (
         <>
-            <AdminNavbar/>
-            <Sidebar/>
+            <AdminNavbar />
+            <Sidebar />
             <Routes>
-            <Route path="/AdminHome" element={<Dashboard />} />
-
+                <Route path="/AdminHome" element={<Dashboard />} />
                 <Route path="/service" element={<Services />} />
+                <Route path="/category" element={<Category />} />
                 <Route path="/provider" element={<ProviderCard />} />
-
             </Routes>
         </>
     );

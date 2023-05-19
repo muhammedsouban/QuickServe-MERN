@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { MdPerson, MdCategory, MdMiscellaneousServices, MdOutlineLogout } from 'react-icons/md';
 import { BsPersonGear } from 'react-icons/bs';
 import { RiDashboardFill } from 'react-icons/ri';
@@ -7,7 +7,10 @@ import { GoFileMedia } from 'react-icons/go';
 import { AiOutlineCalendar } from 'react-icons/ai';
 
 function Sidebar() {
-
+  const navigate = useNavigate()
+  const Logout = (() => {
+    localStorage.clear();
+  })
   const handleNavLinkFocus = (event) => {
     event.target.style.color = 'yellow';
   };
@@ -38,7 +41,7 @@ function Sidebar() {
               Users
             </li>
           </NavLink>
-          <NavLink to={'/admin/categories'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/admin/category'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
               <MdCategory size={25} className='mr-4 ml-4' />
               Categories
@@ -62,7 +65,7 @@ function Sidebar() {
               Bookings
             </li>
           </NavLink>
-          <NavLink to={'/admin/logout'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
+          <NavLink to={'/admin/login'} onClick={Logout} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur}>
             <li className='text-xl py-4 flex'>
               <MdOutlineLogout size={25} className='mr-4 ml-4' />
               Logout

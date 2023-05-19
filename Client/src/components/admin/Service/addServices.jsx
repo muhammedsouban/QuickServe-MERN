@@ -1,41 +1,50 @@
-import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useState } from 'react';
-import { BiArrowBack } from 'react-icons/bi'
-import './addservice.css'
+import { useDispatch, useSelector } from 'react-redux';
+import { addService } from "../../../redux/Slice/serviceSlice";
+import { BiArrowBack } from 'react-icons/bi';
+import './addservice.css';
 
 const AddServiceModel = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-const [service,setService]=useState([])
+  const dispatch = useDispatch();
+  const service = useSelector((state) => state.service);
+
   const handleImageChange = (e) => {
     const image = e.target.files[0];
     setSelectedImage(image);
     setPreviewImage(URL.createObjectURL(image));
   };
 
-  const APIURL = useSelector((state) => state.APIURL.url);
   const handleGoBack = () => {
     onClose();
   };
+
   const onChange = (e) => {
-    setService(e.target.name, e.target.value);
+    dispatch(addService({ field: e.target.name, value: e.target.value }));
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const { servicename, category, description, serviceincludes, price } = service;
+
     try {
       const formData = new FormData();
       formData.append('image', selectedImage);
-      formData.append('servicename', service.servicename);
-      formData.append('category', service.category);
-      formData.append('description', service.description);
-      formData.append('serviceincludes', service.serviceincludes);
-      formData.append('price', service.price);
+      formData.append('servicename', servicename);
+      formData.append('category', category);
+      formData.append('description', description);
+      formData.append('serviceincludes', serviceincludes);
+      formData.append('price', price);
+  
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
-
-      const response = await axios.post(`${APIURL}/admin/Add-Service/`, formData, { headers });
+  
+      const response = await axios.post(`http://localhost:8080/admin/Add-Service/`, formData, { headers });
+  
       if (response.data) {
-        window.location.reload()
+        window.location.reload();
       } else {
         alert(response.data.message);
       }
@@ -72,7 +81,7 @@ const [service,setService]=useState([])
           </div>
           <div className="txt_field">
             <select className='select-field' value={service.category} name='category' onChange={onChange}>
-              <option disabled value="">Choose Category</option> {/* Empty default option */}
+              <option value="">Choose Category</option>
               <option value="Plumber">Plumber</option>
               <option value="Carpenter">Carpenter</option>
               <option value="Barber">Barber</option>
