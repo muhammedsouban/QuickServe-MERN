@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import AddServiceModel from '../Service/addServices'
 import Deleteservice from '../../comfirmations/Deleteservice'
-import EditServiceModel from '../Service/editService';
-import axios from "axios";
+import AddServiceModel from './addServices'
+import EditServiceModel from './editService'
 import { MdDelete, MdEdit } from 'react-icons/md'
-
+import { getServices } from '../../../Api/AdminAPI';
 import './Services.css'
 
 function Services() {
@@ -27,10 +26,9 @@ function Services() {
         setShowModal(!showModal)
     }
 
-    const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
     useEffect(() => {
-        axios.get(`http://localhost:8080/admin/getServices/`, { headers }).then(response => {
-            setServices(response.data)
+        getServices().then(data => {
+            setServices(data)
         })
     }, [])
 

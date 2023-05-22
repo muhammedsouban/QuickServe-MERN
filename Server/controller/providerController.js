@@ -32,6 +32,7 @@ export const registerProvider = async (req, res) => {
             });
             const ProviderData = await provider.save();
             res.json(ProviderData);
+            console.log(ProviderData);
         } else {
             res.json({ message: "Email already taken" });
         }

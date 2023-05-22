@@ -31,7 +31,7 @@ export const verifyAdminToken = (req, res, next) => {
             if (err) {
                 res.json('unauthorized');
             }
-            req.user = decoded;
+            req.admin = decoded;
             next();
         });
     } else {

@@ -1,23 +1,20 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
 
-import { store, persistor } from "./redux/Store";
 import "./App.css";
 import ProviderRoute from "./Routes/providerRoute";
 import ProviderHome from "./components/Provider/home";
 import AdminLogin from "./components/admin/Login/login";
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import "react-toastify/dist/ReactToastify.css";
 import Servicecard from "./components/user/servicecard";
 import Home from "./components/user/home/home";
 import UserRoute from "./Routes/userRoute";
 import AdminRoute from "./Routes/adminRoute";
 import ProviderLogin from "./components/Provider/login";
+
+
 function App() {
+
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+    
         <BrowserRouter>
           <Routes>
             <Route path="/provider/register" element={<ProviderHome />} />
@@ -30,11 +27,8 @@ function App() {
             <Route exact path="/provider/*" element={<ProviderRoute />} />
           </Routes>
         </BrowserRouter>
-      </PersistGate>
-    </Provider>
+     
   );
 }
 
 export default App;
-
-

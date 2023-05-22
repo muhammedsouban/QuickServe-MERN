@@ -1,5 +1,5 @@
 import React from 'react'
-import axios from 'axios';
+import { deleteCategory } from '../../Api/AdminAPI';
 
 function DeleteCategory({ open, Id }) {
 
@@ -8,7 +8,7 @@ function DeleteCategory({ open, Id }) {
     };
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
     const Delete = () => {
-        const res = axios.put(`http://127.0.0.1:8080/admin/deleteCategory/${Id}`,{},{headers});
+        const res = deleteCategory(Id, headers)
         if (res) {
             open(false);
             window.location.reload()

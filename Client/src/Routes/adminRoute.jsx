@@ -4,7 +4,7 @@ import AdminNavbar from "../components/admin/AdminNavbar/AdminNavbar";
 import Sidebar from "../components/admin/sidebar/sidebar";
 import Dashboard from "../components/admin/Dashboard/dashboard";
 import ProviderCard from "../components/admin/ProviderList";
-import Category from "../components/admin/Category";
+import Category from "../components/admin/category/Category";
 function AdminRoute() {
     return (
         <>

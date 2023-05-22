@@ -1,17 +1,28 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { BiArrowBack,BiCamera } from 'react-icons/bi';
+import { useState, useEffect } from 'react';
+import { BiArrowBack, BiCamera } from 'react-icons/bi';
 import './register.css';
 
 const ProviderRegister = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [Category, setCategory] = useState([])
 
   const handleImageChange = (e) => {
     const image = e.target.files[0];
     setSelectedImage(image);
     setPreviewImage(URL.createObjectURL(image));
   };
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8080/admin/categories")
+      .then((res) => {
+        setCategory(res.data.map((item) => item.categoryName));
+      })
+      .catch((error) => {
+        console.error("Error fetching categories:", error);
+      });
+  }, []);
 
   const [provider, setProvider] = useState({
     username: '',
@@ -58,7 +69,7 @@ const ProviderRegister = ({ onClose }) => {
 
       const response = await axios.post('http://localhost:8080/provider/register', formData);
 
-      if (response.data) {
+      if (response.data.email) {
         window.location.reload();
       } else {
         alert(response.data.message);
@@ -130,17 +141,22 @@ const ProviderRegister = ({ onClose }) => {
               <label for="floating_password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Password</label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
-              <input onChange={onChange} value={provider.CPassword} type="password" name="Cpassword" id="floating_repeat_password" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "  />
+              <input onChange={onChange} value={provider.CPassword} type="password" name="Cpassword" id="floating_repeat_password" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
               <label for="floating_repeat_password" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Confirm password</label>
             </div>
           </div>
 
           <div className='mb-4'>job Details</div>
-          
+
           <div className="grid md:grid-cols-2 md:gap-6">
-            <div className="relative z-0 w-full  group mb-4">
-              <input onChange={onChange} value={provider.category} type="text" name="category" id="floating_phone" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label for="floating_phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Category</label>
+            <div className="relative z-0 w-full group mb-4">
+              <select onChange={onChange} value={provider.category} name="category" id="floating_phone" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                <option value="">Choose Category</option>
+                {Category.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+              <label htmlFor="floating_phone" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Category</label>
             </div>
             <div className="relative z-0 w-full group mb-4">
               <input onChange={onChange} value={provider.experience} type="text" name="experience" id="floating_company" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none dark:text-black dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
@@ -161,35 +177,35 @@ const ProviderRegister = ({ onClose }) => {
               <label for="floating_company" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Job Description</label>
             </div>
             <div className="relative z-0 w-full  group mb-4">
-            
-          <div className="mb-5 flex items-center">
-            <label htmlFor="profile_image" className="cursor-pointer">
-              <input
-                onChange={handleImageChange}
-                type="file"
-                id="profile_image"
-                accept="image/*"
-                className="sr-only"
-              />
-              <div className="flex items-center">
-                {previewImage ? (
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    className="w-12 h-12 object-cover rounded-full"
+
+              <div className="mb-5 flex items-center">
+                <label htmlFor="profile_image" className="cursor-pointer">
+                  <input
+                    onChange={handleImageChange}
+                    type="file"
+                    id="profile_image"
+                    accept="image/*"
+                    className="sr-only"
                   />
-                ) : (
-                  <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                    <span className="text-gray-500">
-                      <BiCamera size={20} />
-                    </span>
+                  <div className="flex items-center">
+                    {previewImage ? (
+                      <img
+                        src={previewImage}
+                        alt="Preview"
+                        className="w-12 h-12 object-cover rounded-full"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                        <span className="text-gray-500">
+                          <BiCamera size={20} />
+                        </span>
+                      </div>
+                    )}
+                    <span className="ml-3">Upload Image</span>
                   </div>
-                )}
-                <span className="ml-3">Upload Image</span>
+                </label>
               </div>
-            </label>
-          </div>
-          </div>
+            </div>
           </div>
           <div className="flex justify-center mt-6">
             <button

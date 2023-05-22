@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import { ApproveProvider, UnBlockProvider, blockProvider, getProvider } from '../../Api/AdminAPI';
 
 const ProviderCard = () => {
     const [providers, setProviders] = useState([]);
@@ -10,8 +11,7 @@ const ProviderCard = () => {
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
 
     const handleApprove = (providerId) => {
-        axios
-            .put(`http://localhost:8080/admin/approve/${providerId}`, {}, { headers })
+        ApproveProvider(providerId, headers)
             .then((res) => {
                 if (res) {
                     window.location.reload();
@@ -23,18 +23,7 @@ const ProviderCard = () => {
     };
 
     const handleBlock = (providerId) => {
-        axios
-            .put(`http://localhost:8080/admin/block/${providerId}`, {}, { headers })
-            .then((res) => {
-                window.location.reload()
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-    const handleUnblock = (providerId) => {
-        axios
-            .put(`http://localhost:8080/admin/unblock/${providerId}`, {}, { headers })
+        blockProvider(providerId, headers)
             .then((res) => {
                 window.location.reload()
             })
@@ -43,11 +32,22 @@ const ProviderCard = () => {
             });
     };
 
-    useEffect(() => {
-        axios
-            .get('http://localhost:8080/admin/getprovider', { headers })
+    const handleUnblock = (providerId) => {
+        UnBlockProvider(providerId, headers)
             .then((res) => {
-                setProviders(res.data);
+                if (res) {
+                    window.location.reload()
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    useEffect(() => {
+        getProvider(headers)
+            .then((data) => {
+                setProviders(data);
             })
             .catch((error) => {
                 console.log(error);
@@ -68,7 +68,7 @@ const ProviderCard = () => {
         }
         return nameMatches && statusMatches;
     });
-    
+
     return (
         <section className="container ms-80 px-6 py-4 mx-auto">
             <div className="flex justify-between mb-8">
@@ -87,15 +87,37 @@ const ProviderCard = () => {
                         Search
                     </button>
                 </div>
-                <select
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    className="w-1/4 h-10 border-2 mr-40 border-blue-900 focus:outline-none focus:border-blue-500 text-blue-900 rounded px-2 md:px-3 py-0 md:py-1 tracking-wider">
-                    <option value="all">All</option>
-                    <option value="approved">Approved</option>
-                    <option value="blocked">Blocked</option>
-                    <option value="not-approved">Not Approved</option>
-                </select>
+                <div className='w-1/4 h-10  mr-24'>
+                    <button
+                        className={`button ${filter === 'all' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                        onClick={() => setFilter('all')}
+                    >
+                        All
+                    </button>
+
+                    <button
+                        className={`button ${filter === 'approved' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                        onClick={() => setFilter('approved')}
+                    >
+                        Approved
+                    </button>
+
+                    <button
+                        className={`button ${filter === 'blocked' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                        onClick={() => setFilter('blocked')}
+                    >
+                        Blocked
+                    </button>
+
+                    <button
+                        className={`button ${filter === 'not-approved' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                        onClick={() => setFilter('not-approved')}
+                    >
+                        Not Approved
+                    </button>
+
+                </div>
+
             </div>
 
 
@@ -110,7 +132,7 @@ const ProviderCard = () => {
                                 <img
                                     alt="avatar"
                                     className="w-14 h-14 rounded-full border-2 border-gray-300"
-                                    src="https://picsum.photos/seed/picsum/200"
+                                    src={`http://localhost:8080/public/images/${provider.image}`}
                                 />
                                 <h4 id="name" className="text-xl ml-5 font-semibold">
                                     {provider.providername}

@@ -15,8 +15,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     service: serviceReducer,
     editservice: ServiceEditReducer,
-    user: userReducer,
-    // Add other reducers here
+    user: userReducer,    
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

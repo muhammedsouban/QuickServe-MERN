@@ -7,9 +7,10 @@ import Navbar from "../Navbar/Navbar";
 import Hero from "../Hero/hero";
 import ServiceCard from "../servicecard";
 import CategorySlider from "../Categorylist";
+import MyCard from "./specialCards";
 
 function Home() {
-  
+
 
   // useEffect(() => {
   //   const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -22,12 +23,15 @@ function Home() {
     <div>
       <Navbar />
       <Hero />
-        <CategorySlider/>
+      <CategorySlider />
       <div className="flex space-x-10 mt-6 justify-center">
         <ServiceCard />
       </div>
 
+      <MyCard />
+
     </div>
+
   );
 }
 

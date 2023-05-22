@@ -14,7 +14,7 @@ const serviceSchema = mongoose.Schema({
     type: String,
   },
   price: {
-    type: Number,
+    type: String,
   },
   image:{
     type:String

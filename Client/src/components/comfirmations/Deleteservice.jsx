@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios';
+import { deleteService } from '../../Api/AdminAPI';
 
 function Deleteservice({open,serviceId}) {
 
@@ -8,11 +9,12 @@ function Deleteservice({open,serviceId}) {
     };
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
     const Delete = () => {
-        const res = axios.delete(`http://127.0.0.1:8080/admin/deleteService/${serviceId}`,headers);
-        if (res) {
-            open(false);
-            window.location.reload()
-        }
+        deleteService(serviceId,headers).then((data)=>{
+            if (data) {
+                open(false);
+                window.location.reload()
+            }
+        })
     };
     
   return (
