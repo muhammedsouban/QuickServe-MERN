@@ -3,11 +3,15 @@ import { NavLink } from 'react-router-dom';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { TbTruckDelivery } from 'react-icons/tb'
 import { FaWallet } from 'react-icons/fa'
-import { MdFavorite, MdHelp, MdLocationOn, MdPerson, MdShoppingCart, MdBusiness } from 'react-icons/md'
+import { MdFavorite, MdHelp, MdLocationOn, MdPerson, MdShoppingCart} from 'react-icons/md'
 
 const Navbar = () => {
   const [nav, setNav] = useState(false)
-
+  const headers = { Authorization: `Bearer ${localStorage.getItem('userToken')}` };
+  const logout = () => {
+    localStorage.removeItem('userToken');
+    window.location.reload()
+  };
   return (
     <div className='fixed top-0 navbar flex justify-between items-center p-4 text-white z-10'>
       <div className='flex  items-center'>
@@ -21,8 +25,19 @@ const Navbar = () => {
 
       {nav ? <div className='bg-black/80 fixed w-full h-screen z-10 top-0 left-0'></div> : ''}
       <div className=' sm:flex items-center  ms-5 p-1 text-[18px]'>
-       <NavLink to={'/provider/register'}> <p className='p-2 hidden sm:flex'>Register as profession</p></NavLink> 
-        <MdPerson size={25} className='ms-5 hidden sm:flex' /><p className='p-2 hidden sm:flex'>Login</p>
+        <NavLink to={'/provider/register'}> <p className='p-2 hidden sm:flex'>Register as profession</p></NavLink>
+        {headers && headers.Authorization !== 'Bearer null' ? (
+  <NavLink onClick={logout} className='flex items-center'>
+    <MdPerson size={25} className='ms-5 hidden sm:flex' />
+    <p className='p-2 hidden sm:flex'>Logout</p>
+  </NavLink>
+) : (
+  <NavLink to={'/login'} className='flex items-center'>
+    <MdPerson size={25} className='ms-5 hidden sm:flex' />
+    <p className='p-2 hidden sm:flex'>Login</p>
+  </NavLink>
+)}
+
         <div onClick={() => setNav(!nav)} className='cursor-pointer ms-5 '>
           <AiOutlineMenu size={30} />
         </div>

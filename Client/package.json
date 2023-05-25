@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
     "@heroicons/react": "^1.0.6",
+    "@mui/material": "^5.13.2",
+    "@mui/styled-engine-sc": "^5.12.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -13,6 +17,7 @@
     "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
     "react-icons": "^4.8.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.10.0",
@@ -22,6 +27,8 @@
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
     "slick-carousel": "^1.8.1",
+    "styled-components": "^5.3.10",
+    "tailwind-scrollbar": "^3.0.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -4,19 +4,20 @@ const initialState = {
   username: "",
   email: "",
   mobile: "",
-  password: "",
+  password: ""
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    userSignup: (state, action) => {
+    userData: (state, action) => {
       const { field, value } = action.payload;
       state[field] = value;
     },
-  },
+    resetUserState: () => initialState
+  }
 });
 
-export const { userSignup } = userSlice.actions;
+export const { userData,resetUserState } = userSlice.actions;
 export default userSlice.reducer;

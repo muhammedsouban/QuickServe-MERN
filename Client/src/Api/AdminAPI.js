@@ -54,7 +54,7 @@ export const getProvider = async (headers) => {
     return res.data;
 };
 export const ApproveProvider = async (providerId, headers) => {
-    const res = await Axiosadmin.put(`provider-Approve/${providerId}`,{}, {headers});
+    const res = await Axiosadmin.put(`provider-Approve/${providerId}`, {}, { headers });
     return res.data;
 };
 export const blockProvider = async (providerId, headers) => {
@@ -64,5 +64,17 @@ export const blockProvider = async (providerId, headers) => {
 
 export const UnBlockProvider = async (providerId, headers) => {
     const res = await Axiosadmin.put(`/provider-Unblock/${providerId}`, {}, { headers });
+    return res.data;
+};
+
+//users
+
+export const getUsers = async (headers) => {
+    const res = await Axiosadmin.get(`/users`, { headers });
+    return res.data;
+};
+
+export const HandleUserblock = async (userId, block, headers) => {
+    const res = await Axiosadmin.put(`/user-BlockHandle/${userId}`, { isBlock: block }, { headers });
     return res.data;
 };

@@ -1,18 +1,20 @@
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import { validateEmail } from '../../../validateForm';
-
+import { useNavigate ,Link} from 'react-router-dom';
 import { useState } from 'react';
 import './login.css'
+import { validateEmail } from '../../../validateForm';
+import { useDispatch } from 'react-redux';
+import {userData} from '../../../redux/Slice/userSlice'
+import { userLogin } from '../../../Api/userAPI';
+import toast from 'react-hot-toast';
 
-function AdminLogin() {
+function UserLogin() {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch()
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!email || !password) {
       toast.error('Please fill all the blanks')
       return
@@ -21,24 +23,22 @@ function AdminLogin() {
       toast.error('Invalid Email , Please enter valid Email ID.')
       return;
     }
-    try {
-      const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      const response = await axios.post(`http://localhost:8080/admin/login`, { email, password }, { headers });
-      if (response.data && response.data.email) {
-        localStorage.setItem('token', response.data.token);
-        navigate('/admin/adminHome');
+
+    await userLogin(email,password).then((res) => {
+      if (res.data.error) {
+        toast.error(res.data.error)
       } else {
-        toast.error(response.data.message);
+        localStorage.setItem("userToken", res.data.token)
+        dispatch(userData(res.data.userData))
+        navigate('/')
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    })
+  }
 
   return (
     <>
       <div className="center1 max-w-[500px] w-full">
-          <h1 className='text-2xl text-center'>Admin Login</h1>
+        <h1 className='text-2xl text-center'>Login</h1>
         <form onSubmit={handleSubmit}>
           <div className="txt_field1">
             <input
@@ -47,6 +47,7 @@ function AdminLogin() {
               name="email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
+              
             />
             <label>Email</label>
           </div>
@@ -62,13 +63,15 @@ function AdminLogin() {
             />
             <label>Password</label>
           </div>
-
-          <button type="submit" className="w-full text-white bg-blue-900 hover:bg-blue-500 focus:outline-none  font-medium rounded-lg text-xl mb-5 py-2.5 text-center ">LOGIN</button>
+          <button type="submit" className="w-full text-white bg-blue-900 hover:bg-blue-500 focus:outline-none  font-medium rounded-lg text-xl py-2.5 text-center ">LOGIN</button>
         </form>
+        <div className="signup_link">
+            Not a member? <Link to="/register">Register</Link>
+          </div>
       </div>
     </>
 
   );
 }
 
-export default AdminLogin;
+export default UserLogin;

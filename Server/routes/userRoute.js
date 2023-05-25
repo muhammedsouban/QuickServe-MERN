@@ -8,5 +8,6 @@ import { upload } from "../middleware/multer.js";
 userRoute.post('/register',upload.single('image'),userController.insertUser)
 userRoute.post('/login',userController.Login)
 userRoute.patch('/profile-update',upload.single('image'),verifyToken,userController.UpdateProfile)
+userRoute.post('/cart/:serviceId',verifyToken,userController.AddToCart)
 
 export default userRoute

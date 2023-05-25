@@ -1,6 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import mongoose from 'mongoose';
 export const login = async () => {
     try {
         console.log("logged in");
@@ -47,23 +48,28 @@ export const insertUser = async (req, res) => {
 
 export const Login = async (req, res) => {
     try {
-        const userData = await User.findOne({ email: req.body.email })
-        const password = req.body.password
-        if (userData) {
-            const passwordMatch = await bcrypt.compare(password, userData.password);
-            if (passwordMatch) {
-                const token = jwt.sign({ username: userData.username, email: userData.email, id: userData._id }, 'myWebAppSecretKey123', { expiresIn: "180000" })
-                res.json({ userData, token })
-            } else {
-                res.json({ message: 'Email or Password incorrect' })
-            }
-        } else {
-            res.json({ message: 'Email or Password incorrect' })
+        const { email, password } = req.body;
+        const userData = await User.findOne({ email });
+        if (!userData) {
+            return res.json({ error: 'Email or Password incorrect' });
         }
+        if (userData.isBlocked) {
+            return res.json({ error: 'Your account is blocked' });
+        }
+        const passwordMatch = await bcrypt.compare(password, userData.password);
+        if (!passwordMatch) {
+            return res.json({ error: 'Email or Password incorrect' });
+        }
+        const token = jwt.sign(
+            { username: userData.username, email: userData.email, id: userData._id },
+            process.env.JWT_SECRET_KEY
+        );
+        res.json({ userData, token });
     } catch (error) {
         console.log(error);
     }
-}
+};
+
 
 
 export const Profile = async (req, res) => {
@@ -96,3 +102,28 @@ export const UpdateProfile = async (req, res) => {
     }
 };
 
+
+export const AddToCart = async (req, res) => {
+    try {
+      const id = new mongoose.Types.ObjectId(req.user.id);
+      const serviceId = new mongoose.Types.ObjectId(req.params.serviceId);
+  
+      const Cart = await User.updateOne(
+        { _id: id },
+        {
+          $addToSet: {
+            Cart: serviceId
+          }
+        }
+      );
+  
+      if (Cart.modifiedCount === 0) {
+        res.json({ message: 'Service Already Exists in Cart' });
+      } else {
+        res.json({ message: 'Service Added to Cart Successfully', Cart });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  

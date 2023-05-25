@@ -19,6 +19,9 @@ const userSchema = mongoose.Schema({
   password: {
     type: String
   },
+  Cart: {
+    type: Array
+},
   isBlocked: {
     type: Boolean,
     default: false

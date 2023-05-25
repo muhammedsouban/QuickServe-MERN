@@ -23,4 +23,8 @@ adminRoute.put('/provider-Block/:providerId', verifyAdminToken, adminController.
 adminRoute.put('/provider-Unblock/:providerId', verifyAdminToken, adminController.UnBlockProvider)
 adminRoute.put('/provider-Approve/:providerId', verifyAdminToken, adminController.ApproveProvider)
 
+adminRoute.get('/users', verifyAdminToken, adminController.users)
+adminRoute.put('/user-BlockHandle/:userId', verifyAdminToken, adminController.handleUserBlock)
+
+
 export default adminRoute

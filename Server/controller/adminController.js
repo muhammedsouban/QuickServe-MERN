@@ -225,3 +225,22 @@ export const category = async (req, res) => {
         console.log(error);
     }
 }
+
+export const users = async (req, res) => {
+    try {
+        const userData = await User.find().lean()
+        res.status(200).json(userData)
+    } catch (error) {
+        console.log(error);
+    }
+}
+export const handleUserBlock = async (req, res) => {
+    try {
+            const userData = await User.findByIdAndUpdate({ _id: req.params.userId},
+                { $set: { isBlocked: req.body.isBlock } })
+            res.status(200).json(userData)
+        
+    } catch (error) {
+        console.log(error);
+    }
+}

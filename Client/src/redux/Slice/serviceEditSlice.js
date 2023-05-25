@@ -18,7 +18,6 @@ const serviceEditSlice = createSlice({
       state[field] = value;
     },
     UpdateService: (state, action) => {
-      // Reset the state to initial values after successful update if needed
       return initialState;
     },
   },

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { BiArrowBack } from 'react-icons/bi';
 import { editCategory, updateCategory } from '../../../Api/AdminAPI';
