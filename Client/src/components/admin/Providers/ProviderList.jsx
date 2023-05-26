@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import { ApproveProvider, UnBlockProvider, blockProvider, getProvider } from '../../Api/AdminAPI';
+import { ApproveProvider, UnBlockProvider, blockProvider, getProvider } from '../../../Api/AdminAPI';
 
 const ProviderCard = () => {
     const [providers, setProviders] = useState([]);

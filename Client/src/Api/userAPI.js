@@ -1,16 +1,21 @@
 import { Axiosuser } from "../axios";
 
 
-export const userLogin = async (email,password) => {
-    const res = await Axiosuser.post("/login",{email,password})
+export const userLogin = async (email, password) => {
+    const res = await Axiosuser.post("/login", { email, password })
     return res;
 }
-export const userSignup=async(formData)=>{
-    const res =await Axiosuser.post("/register",formData)
+export const userSignup = async (formData) => {
+    const res = await Axiosuser.post("/register", formData)
     return res;
 }
 
-export const addToCart =async(serviceId,headers)=>{
-    const res = await Axiosuser.post(`/cart/${serviceId}`,{},{headers})
+export const addToCart = async (serviceId, headers) => {
+    const res = await Axiosuser.post(`/cart/${serviceId}`, {}, { headers })
     return res
 }
+export const getServicesbycategory = async (categoryname) => {
+    const res = await Axiosuser.get(`/services/:${categoryname}`)
+    return res
+}
+

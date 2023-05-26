@@ -6,17 +6,19 @@ import userReducer from "./Slice/userSlice";
 import serviceReducer from "./Slice/serviceSlice";
 import ServiceEditReducer from "./Slice/serviceEditSlice";
 import cartReducer from "./Slice/cartSlice";
+import locationReducer from "./Slice/locationSlice";
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["user","cart"],
+    whitelist: ["user","cart","location"],
 };
 
 const rootReducer = combineReducers({
     service: serviceReducer,
     editservice: ServiceEditReducer,
     user: userReducer,    
-    cart:cartReducer
+    cart:cartReducer,
+    location:locationReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
