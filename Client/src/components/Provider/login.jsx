@@ -14,8 +14,7 @@ function ProviderLogin() {
     try {
       const response = await axios.post(`http://localhost:8080/provider/login`, { email, password });
       if (response.data && response.data.email) {
-        console.log(response.data.token);
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('ProviderToken', response.data.token);
         navigate('/provider/');
       } else {
         alert(response.data.message);

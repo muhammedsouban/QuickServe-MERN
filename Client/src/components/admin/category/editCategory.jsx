@@ -8,7 +8,6 @@ const EditCategoryModel = ({ open, Id }) => {
     const [categoryname, setCategoryname] = useState('');
     const [categoryImage, setCategoryImage] = useState(null);
 
-
     const handleImageChange = (e) => {
         const image = e.target.files[0];
         setSelectedImage(image);

@@ -14,7 +14,7 @@ function Services() {
 
 
     const [services, setServices] = useState([])
-    
+
     const [deleteServiceId, setDeleteServiceId] = useState('');
 
     const handleDelete = (serviceId) => {
@@ -35,7 +35,8 @@ function Services() {
 
     const handleEdit = (serviceId) => {
         setEditServiceId(serviceId);
-        setShowEditModal(true);    };
+        setShowEditModal(true);
+    };
 
     return (
         <div>
@@ -60,7 +61,7 @@ function Services() {
                         </div>
                     </div>
                     <button
-                        className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        className="bg-blue-900 hover:bg-blue-700 text-white md:text-xl text-xs font-bold py-2 px-2 rounded"
                         onClick={toggleModal}
                     >
                         Add Service
@@ -105,7 +106,10 @@ function Services() {
 
                     {showModal && (
                         <div className="modal-overlay">
-                            <AddServiceModel title="Add Service" onClose={toggleModal}>
+                            <AddServiceModel title="Add Service"
+                                onClose={toggleModal}
+                                Services={services}
+                            >
                             </AddServiceModel>
                         </div>
 
@@ -119,11 +123,13 @@ function Services() {
                             />
                         </div>
                     )}
-                     {showEditModal && (
+                    {showEditModal && (
                         <div className="modal-overlay">
                             <EditServiceModel
                                 open={setShowEditModal}
                                 serviceId={EditServiceId}
+                                Services={services}
+
                             />
                         </div>
                     )}

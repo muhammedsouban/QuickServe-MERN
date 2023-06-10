@@ -1,7 +1,12 @@
 import User from "../models/userModel.js";
+import Booking from '../models/bookingModel.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import mongoose from 'mongoose';
+import Admin from "../models/adminModel.js";
+import Conversation from "../models/conversationModel.js";
+import Message from "../models/messageMode.js";
+
 export const login = async () => {
     try {
         console.log("logged in");
@@ -45,6 +50,25 @@ export const insertUser = async (req, res) => {
     }
 };
 
+export const refreshTokens = async (req, res) => {
+    try {
+        const refreshToken = req.body.refreshToken;
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                return res.json({ error: 'Invalid refresh token' });
+            }
+            const accessToken = jwt.sign(
+                { username: decoded.username, email: decoded.email, id: decoded.id },
+                process.env.JWT_SECRET_KEY,
+                { expiresIn: '15m' }
+            );
+            res.json({ accessToken });
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({ error: 'Internal server error' });
+    }
+};
 
 export const Login = async (req, res) => {
     try {
@@ -64,7 +88,12 @@ export const Login = async (req, res) => {
             { username: userData.username, email: userData.email, id: userData._id },
             process.env.JWT_SECRET_KEY
         );
-        res.json({ userData, token });
+        const refreshToken = jwt.sign(
+            { username: userData.username, email: userData.email, id: userData._id },
+            process.env.REFRESH_TOKEN_SECRET
+        );
+
+        res.json({ userData, token, refreshToken });
     } catch (error) {
         console.log(error);
     }
@@ -74,7 +103,7 @@ export const Login = async (req, res) => {
 
 export const Profile = async (req, res) => {
     try {
-        const id = req.decode.id
+        const id = req.user.id
         const userData = await User.findOne({ _id: id })
         res.json(userData)
     } catch (error) {
@@ -105,25 +134,231 @@ export const UpdateProfile = async (req, res) => {
 
 export const AddToCart = async (req, res) => {
     try {
-      const id = new mongoose.Types.ObjectId(req.user.id);
-      const serviceId = new mongoose.Types.ObjectId(req.params.serviceId);
+        const id = new mongoose.Types.ObjectId(req.user.id);
+        const serviceId = new mongoose.Types.ObjectId(req.params.serviceId);
+
+        const Cart = await User.updateOne(
+            { _id: id },
+            {
+                $addToSet: {
+                    Cart: serviceId
+                }
+            }
+        );
+
+        if (Cart.modifiedCount === 0) {
+            res.json({ message: 'Service Already Exists in Cart' });
+        } else {
+            res.json({ message: 'Service Added to Cart Successfully', Cart });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+
+export const getCart = async (req, res) => {
+    try {
+        const id = new mongoose.Types.ObjectId(req.user.id);
+        const cartData = await User.aggregate([
+            { $match: { _id: id } },
+            {
+                $lookup: {
+                    from: 'services',
+                    localField: 'Cart',
+                    foreignField: '_id',
+                    as: 'CartItems'
+                }
+            }
+        ]);
+
+        res.status(200).json(cartData);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+
+export const RemoveCart = async (req, res) => {
+    try {
+        const id = new mongoose.Types.ObjectId(req.user.id);
+        const serviceId = new mongoose.Types.ObjectId(req.params.serviceId);
+
+        await User.updateOne(
+            { _id: id },
+            {
+                $pull: {
+                    Cart: serviceId
+                }
+            }
+        );
+        res.status(200).json({ message: 'Item removed from cart successfully' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export const addAddress = async (req, res) => {
+    try {
+        console.log(req.body);
+        const id = new mongoose.Types.ObjectId(req.user.id);
+        const addressId = new mongoose.Types.ObjectId();
+        const newAddress = { ...req.body, id: addressId };
+        const Address = await User.findByIdAndUpdate({ _id: id },
+            {
+                $addToSet: {
+                    Address: newAddress
+                }
+            }
+        );
+        res.json('address added successfully')
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getaddress = async (req, res) => {
+    try {
+        const userId = new mongoose.Types.ObjectId(req.user.id);
+        const user = await User.findById(userId).lean();
+        const addresses = user.Address;
+        res.json(addresses);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const AddBooking = async (req, res) => {
+    try {
+
+        const data = req.body
+        const newBooking = new Booking({
+            userId: data.userId,
+            services: data.service.map((service) => ({
+                serviceId: service._id,
+                quantity: service.qty,
+            })),
+            date: new Date(data.dateTime[0]),
+            startTime: data.dateTime[1],
+            totalPrice: data.totalPrice,
+            address: data.address,
+            status: 'Pending'
+        });
+        const BookingData = await newBooking.save();
+        const user = await User.findOne({ _id: data.userId })
+        user.Cart = [];
+        await user.save();
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getBookings = async (req, res) => {
+    try {
+        const userId = req.user.id
+        const bookings = await Booking.aggregate([
+            {
+                $match: {
+                    userId: new mongoose.Types.ObjectId(userId),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'services',
+                    localField: 'services.serviceId',
+                    foreignField: '_id',
+                    as: 'serviceData',
+                },
+            },
+            {
+                $sort: {
+                    createdAt: -1,
+                },
+            },
+        ]).exec();
+
+
+        console.log(bookings);
+        res.status(200).json(bookings);
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+
+export const AddChat = async (req, res) => {
+    try {
+        const { sender, message, conversationId } = req.body.data
+        const newMessage = new Message({
+            sender: sender,
+            message: message,
+            conversationId: conversationId,
+        });
+
+        const savedMessage = await newMessage.save();
+
+        res.status(200).json({
+            message: savedMessage,
+        });
+    } catch (error) {
+        console.error('Error adding chat:', error);
+        res.status(500).json({ error: 'An error occurred while adding the chat.' });
+    }
+};
+
+export const createConversation = async (req, res) => {
+    try {
+        const admin = await Admin.findOne();
+        const user = req.body.user;
+
+        const conversation = new Conversation({
+            admin_id: admin._id,
+            user_id: user,
+        });
+
+        const savedConversation = await conversation.save();
+        res.status(200).json({
+            conversation: savedConversation,
+        });
+    } catch (error) {
+        console.error('Error creating conversation:', error);
+        res.status(500).json({ error: 'An error occurred while creating the conversation.' });
+    }
+};
+
+
+export const getChat = async (req, res) => {
+    try {
+      const userId = new mongoose.Types.ObjectId(req.user.id);
   
-      const Cart = await User.updateOne(
-        { _id: id },
+      const chatData = await Conversation.aggregate([
         {
-          $addToSet: {
-            Cart: serviceId
+          $match: {
+            user_id: userId
+          }
+        },
+        {
+          $lookup: {
+            from: 'messages',
+            localField: '_id',
+            foreignField: 'conversationId',
+            as: 'messages'
           }
         }
-      );
+      ]);
   
-      if (Cart.modifiedCount === 0) {
-        res.json({ message: 'Service Already Exists in Cart' });
+      if (chatData.length === 0) {
+        res.json(null);
       } else {
-        res.json({ message: 'Service Added to Cart Successfully', Cart });
+        const chat = chatData[0];
+        res.json(chat);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      res.status(500).json({ error: 'Failed to retrieve chat data' });
     }
   };
-  

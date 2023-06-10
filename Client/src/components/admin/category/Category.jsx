@@ -57,7 +57,7 @@ function Category() {
             </div>
           </div>
           <button
-            className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 md:text-xl text-xs px-2 rounded"
             onClick={toggleModal}
           >
             Add Category
@@ -94,6 +94,7 @@ function Category() {
             <div className="modal-overlay">
               <AddCategoryModel
                 onClose={toggleModal}
+                category={category}
               />
             </div>
           )}

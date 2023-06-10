@@ -78,3 +78,76 @@ export const HandleUserblock = async (userId, block, headers) => {
     const res = await Axiosadmin.put(`/user-BlockHandle/${userId}`, { isBlock: block }, { headers });
     return res.data;
 };
+
+//City
+
+export const addCity = async (city, headers) => {
+    const res = Axiosadmin.post('/city', { city }, { headers })
+    return res
+}
+
+export const deleteCity = async (cityId, headers) => {
+    const res = Axiosadmin.delete(`/city/${cityId}`, { headers })
+    return res
+}
+
+export const getCity = async () => {
+    const res = Axiosadmin.get('/city')
+    return res
+}
+
+//Bookings
+
+export const getBookings = async (headers) => {
+    const res = Axiosadmin.get('/bookings', { headers })
+    return res
+}
+
+//Media
+
+export const addMediaCards = async (FormData) => {
+    const res = Axiosadmin.post('/media-card', FormData)
+    return res
+}
+export const deleteMediaCards = async (id) => {
+    const res = Axiosadmin.delete(`/media-card/${id}`,)
+    return res
+}
+export const addAdvertisement = async (FormData) => {
+    const res = Axiosadmin.post('/media-add', FormData)
+    return res
+}
+
+export const deleteAdvertisement = async (id) => {
+    const res = Axiosadmin.delete(`/media-add/${id}`,)
+    return res
+}
+
+export const addBanner = async (FormData) => {
+    const res = Axiosadmin.post('/media-banner', FormData)
+    return res
+}
+export const deleteBanner = async (id) => {
+    const res = Axiosadmin.delete(`/media-banner/${id}`,)
+    return res
+}
+
+export const getMedia = async () => {
+    const res = Axiosadmin.get('/media')
+    return res
+}
+
+export const sendMessage = async (data, headers) => {
+    const res = await Axiosadmin.post('/chat', { data }, { headers })
+    return res
+}
+
+export const getChat = async (headers) => {
+    const res = Axiosadmin.get('/chat', { headers })
+    return res
+}
+
+export const getConversation = async (userId,headers) => {
+    const res = Axiosadmin.get(`/conversation/${userId}`, { headers })
+    return res
+}

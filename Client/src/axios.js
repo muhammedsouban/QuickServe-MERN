@@ -9,4 +9,8 @@ const Axiosadmin = Axios.create({
     baseURL: "http://localhost:8080/admin/",
 });
 
-export { Axiosuser, Axiosadmin };
+const AxiosProvider = Axios.create({
+    baseURL: "http://localhost:8080/provider/"
+})
+
+export { Axiosuser, Axiosadmin, AxiosProvider };

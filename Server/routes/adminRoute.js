@@ -26,5 +26,27 @@ adminRoute.put('/provider-Approve/:providerId', verifyAdminToken, adminControlle
 adminRoute.get('/users', verifyAdminToken, adminController.users)
 adminRoute.put('/user-BlockHandle/:userId', verifyAdminToken, adminController.handleUserBlock)
 
+adminRoute.get('/city', adminController.cities)
+adminRoute.post('/city', verifyAdminToken, adminController.addCity)
+adminRoute.delete('/city/:cityId', verifyAdminToken, adminController.deleteCity)
+
+adminRoute.post('/media-card', upload.array('images'), adminController.AddMediaCards)
+adminRoute.delete('/media-card/:id', adminController.deleteMediaCards)
+
+adminRoute.post('/media-add', upload.single('image'), adminController.addAdvertisement)
+adminRoute.delete('/media-add/:id', adminController.deleteAdvertisement)
+
+adminRoute.post('/media-banner', upload.single('image'), adminController.addBanner)
+adminRoute.delete('/media-banner/:id', adminController.deleteBanner)
+
+adminRoute.get('/media', adminController.getMedia)
+
+adminRoute.get('/bookings', verifyAdminToken, adminController.bookings)
+
+adminRoute.get('/chat', verifyAdminToken, adminController.getChat)
+adminRoute.post('/chat', verifyAdminToken, adminController.AddChat)
+
+
+adminRoute.get('/conversation/:userId', verifyAdminToken, adminController.getConversation)
 
 export default adminRoute

@@ -1,23 +1,58 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { TbTruckDelivery } from 'react-icons/tb';
 import { FaWallet } from 'react-icons/fa';
 import { BiCurrentLocation } from 'react-icons/bi';
 import { MdFavorite, MdHelp, MdLocationOn, MdPerson, MdShoppingCart, MdSearch } from 'react-icons/md';
 import { useSelector, useDispatch } from 'react-redux';
-import { Location } from '../../../redux/Slice/locationSlice';
+import { UpdateCity, Location } from '../../../redux/Slice/locationSlice';
+import { BsChevronDown } from 'react-icons/bs'
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { getCity } from '../../../Api/AdminAPI';
 
 const Navbar = () => {
   const [nav, setNav] = useState(false);
-  const location = useSelector((state) => state.location);
-  const dispatch = useDispatch();
   const [locationInput, setLocationInput] = useState('');
-  const [showAddress, setShowAddress] = useState(true);
+  const [showAddress, setShowAddress] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [placeSuggestions, setPlaceSuggestions] = useState([]);
+  const location = useSelector((state) => state.location);
+
+  const dispatch = useDispatch();
+  const [city, setCity] = useState([]);
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    getCity().then((res) => {
+      setCity(res.data);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+          axios
+            .get(url)
+            .then((response) => {
+              const data = response.data.address;
+              const matchedCity = res.data?.find((item) => item.cityName === data.city);
+              if (matchedCity) {
+                dispatch(Location({ field: "data", value: data }));
+                dispatch(UpdateCity(data.city))
+              } else {
+                // toast.error('Sorry, the city does not match.');
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        },
+        (error) => {
+          console.error('An error occurred while getting geolocation:', error);
+        }
+      );
+    });
+  }, []);
 
   const toggleNav = () => {
     setNav(!nav);
@@ -25,9 +60,8 @@ const Navbar = () => {
 
   const handleSearch = () => {
     setShowSearch(!showSearch);
-    setShowAddress(false);
+    setShowAddress(false)
   };
-
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -35,31 +69,45 @@ const Navbar = () => {
         const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
         axios.get(url).then((res) => {
           const data = res.data.address;
-          dispatch(Location({ field: 'data', value: data }));
-          toast.success(`location Detected ${data.suburb}`);
+          const selectedCity = data.city || data.town || data.village || '';
+          handleSelectedLocation(selectedCity, data);
+          toast.success(`Location Detected: ${selectedCity}`);
         });
       });
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      console.error('Location is not supported by this browser.');
+    }
+  };
+  const handleSelectedLocation = (selectedLocation, data) => {
+    const cityItem = city.find((cityItem) =>
+      selectedLocation.toLowerCase().includes(cityItem.cityName.toLowerCase())
+    );
+
+    if (cityItem) {
+      setShowSearch(false);
+      dispatch(UpdateCity(cityItem.cityName));
+      if (data) {
+        dispatch(Location({ field: 'data', value: data }))
+      } else {
+        dispatch(Location({ field: 'data', value: selectedLocation }))
+      }
+      toast.success(`selected : ${cityItem.cityName}`)
+    } else {
+      toast.error('Sorry, we are not in your city');
     }
   };
 
+
   const handlePlaceSuggestion = (predictions) => {
-    console.log(predictions);
     const results = predictions.map((prediction) => prediction.display_name);
     setPlaceSuggestions(results);
   };
 
   const handlePlaceSelection = (place) => {
-    setLocationInput(place);
     setPlaceSuggestions([]);
+    handleSelectedLocation(place)
   };
   const headers = { Authorization: `Bearer ${localStorage.getItem('userToken')}` };
-
-  const logout = () => {
-    localStorage.removeItem('userToken');
-    window.location.reload();
-  };
 
   const fetchPlaceSuggestions = (event) => {
     setLocationInput(event);
@@ -69,7 +117,6 @@ const Navbar = () => {
       .get(apiUrl)
       .then((response) => {
         const predictions = response.data;
-        console.log(predictions);
         handlePlaceSuggestion(predictions);
       })
       .catch((error) => {
@@ -77,19 +124,39 @@ const Navbar = () => {
       });
   };
 
+  const handleNavLink = (path) => {
+    if (headers && headers.Authorization !== 'Bearer null') {
+      navigate(path);
+      setNav(!nav);
+
+    } else {
+      toast('Please login');
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem('userToken');
+    window.location.reload();
+  };
+
   return (
     <div className="fixed top-0 navbar flex justify-between items-center p-4 text-white z-10">
       <div className="flex items-center">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">
-          Quick <span className="font-bold">Serve</span>
-        </h1>
+        <NavLink to={'/'}>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">
+            Quick <span className="font-bold">Serve</span>
+          </h1></NavLink>
         <div className="hidden lg:flex items-center ms-5 p-1 text-[18px]">
           <div
             className="hidden lg:flex items-center ms-5 p-1 text-[18px] cursor-pointer"
             onClick={handleSearch}
+            onMouseEnter={(() => setShowAddress(true))}
+            onMouseLeave={(() => setShowAddress(false))}
+
           >
             <MdLocationOn color="red" size={25} />
             <p className="p-2">{location.data.city}</p>
+            <BsChevronDown />
           </div>
 
           {showAddress && (
@@ -98,17 +165,19 @@ const Navbar = () => {
               style={{ top: '70px', left: '300px' }}
             >
               <div className="w-4 h-4 bg-white absolute top-[2px] left-2 -rotate-45 transform origin-top-left" />
-              <AiOutlineClose
-                color="black"
-                size={13}
-                className="absolute right-0 mr-2"
-                onClick={() => setShowAddress(false)}
-              />
               <p className="text-[11px] mb-2">Recent Search</p>
-              <p className="text-[14px]">{location.data.road}</p>
-              <p className="text-[14px]">{location.data.suburb}</p>
-              <p className="text-[14px]">{location.data.city_district}</p>
-              <p className="text-[14px]">{location.data.county}</p>
+              {location.data.data.city ? (
+                <div>
+                  <p className="text-[14px]">{location.data.data.road}</p>
+                  <p className="text-[14px]">{location.data.data.suburb}</p>
+                  <p className="text-[14px]">{location.data.data.city_district}</p>
+                  <p className="text-[14px]">{location.data.data.county}</p>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-[14px] w-[180px]">{location.data.data}</p>
+                </div>
+              )}
             </div>
           )}
           {showSearch && (
@@ -191,21 +260,21 @@ const Navbar = () => {
         </h2>
         <nav>
           <ul className="flex flex-col p-4 text-white">
-            <NavLink to={'/profile'} ><li className="text-xl py-4 flex">
+            <li onClick={(() => handleNavLink('/profile'))} className="text-xl py-4 flex">
               <MdPerson size={25} className="mr-4" /> Profile
-            </li></NavLink>
-            <NavLink to={'/cart'}><li className="text-xl py-4 flex">
+            </li>
+            <li onClick={(() => handleNavLink('/cart'))} className="text-xl py-4 flex">
               <MdShoppingCart size={25} className="mr-4" /> Cart
-            </li></NavLink>
-            <NavLink to={'/bookings'}><li className="text-xl py-4 flex">
+            </li>
+            <li onClick={(() => handleNavLink('/bookings'))} className="text-xl py-4 flex">
               <TbTruckDelivery size={25} className="mr-4" /> Bookings
-            </li></NavLink>
-            <NavLink to={'/favourites'}><li className="text-xl py-4 flex">
+            </li>
+            <li onClick={(() => handleNavLink('/favourites'))} className="text-xl py-4 flex">
               <MdFavorite size={25} className="mr-4" /> Favorites
-            </li></NavLink>
-            <NavLink to={'/wallet'}><li className="text-xl py-4 flex">
+            </li>
+            {/* <li onClick={(() => handleNavLink('/wallet'))} className="text-xl py-4 flex">
               <FaWallet size={25} className="mr-4" /> Wallet
-            </li></NavLink>
+            </li> */}
             <NavLink to={'/help'}><li className="text-xl py-4 flex">
               <MdHelp size={25} className="mr-4" /> Help
             </li></NavLink>

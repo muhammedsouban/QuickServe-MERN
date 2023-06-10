@@ -4,7 +4,6 @@ import { getUsers } from '../../../Api/AdminAPI';
 import '../Services/Services.css'
 import Button from '@mui/material/Button';
 
-
 function UserList() {
     const [showBlockModal, setShowBlockModal] = useState(false);
     const [users, setUsers] = useState([])

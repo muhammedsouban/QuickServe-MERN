@@ -13,15 +13,18 @@ const userSchema = mongoose.Schema({
   mobile: {
     type: Number,
   },
-  image:{
-    type:String
+  image: {
+    type: String
   },
   password: {
     type: String
   },
   Cart: {
     type: Array
-},
+  },
+   Address: {
+    type: Array
+  },
   isBlocked: {
     type: Boolean,
     default: false

@@ -1,9 +1,9 @@
-import { useNavigate ,Link} from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 import './login.css'
 import { validateEmail } from '../../../validateForm';
 import { useDispatch } from 'react-redux';
-import {userData} from '../../../redux/Slice/userSlice'
+import { userData } from '../../../redux/Slice/userSlice'
 import { userLogin } from '../../../Api/userAPI';
 import toast from 'react-hot-toast';
 
@@ -24,12 +24,12 @@ function UserLogin() {
       return;
     }
 
-    await userLogin(email,password).then((res) => {
+    await userLogin(email, password).then((res) => {
       if (res.data.error) {
         toast.error(res.data.error)
       } else {
         localStorage.setItem("userToken", res.data.token)
-        dispatch(userData(res.data.userData))
+        dispatch(userData({ field: 'data', value: res.data.userData }))
         navigate('/')
       }
     })
@@ -47,7 +47,7 @@ function UserLogin() {
               name="email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
-              
+
             />
             <label>Email</label>
           </div>
@@ -66,8 +66,8 @@ function UserLogin() {
           <button type="submit" className="w-full text-white bg-blue-900 hover:bg-blue-500 focus:outline-none  font-medium rounded-lg text-xl py-2.5 text-center ">LOGIN</button>
         </form>
         <div className="signup_link">
-            Not a member? <Link to="/register">Register</Link>
-          </div>
+          Not a member? <Link to="/register">Register</Link>
+        </div>
       </div>
     </>
 

@@ -1,52 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  cartItem: []
+  cartItems: [],
 };
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addCartItem: (state, action) => {
-      const check = state.cartItem.some((el) => el._id === action.payload._id);
-      if (check) {
-      } else {
-        const total = action.payload.price;
-        state.cartItem = [
-          ...state.cartItem,
-          { ...action.payload, qty: 1, total: total },
-        ];
-      }
+   addCartItem: (state, action) => {
+      action.payload.forEach((item) => {
+        const existingItem = state.cartItems.find((cartItem) => cartItem._id === item._id);
+        if (!existingItem) {
+          const total = item.price * item.qty;
+          state.cartItems.push({ ...item, qty: 1, total });
+        }
+      });
     },
     deleteCartItem: (state, action) => {
-      const index = state.cartItem.findIndex((el) => el._id === action.payload);
-      state.cartItem.splice(index, 1);
-      console.log(index);
+      const index = state.cartItems.findIndex((el) => el._id === action.payload);
+      if (index !== -1) {
+        state.cartItems.splice(index, 1);
+      }
     },
     increaseQty: (state, action) => {
-      const index = state.cartItem.findIndex((el) => el._id === action.payload);
-      let qty = state.cartItem[index].qty;
-      const qtyInc = ++qty;
-      state.cartItem[index].qty = qtyInc;
-
-      const price = state.cartItem[index].price;
-      const total = price * qtyInc;
-
-      state.cartItem[index].total = total;
+      const index = state.cartItems.findIndex((el) => el._id === action.payload);
+      if (index !== -1) {
+        state.cartItems[index].qty += 1;
+        state.cartItems[index].total = state.cartItems[index].price * state.cartItems[index].qty;
+      }
     },
     decreaseQty: (state, action) => {
-      const index = state.cartItem.findIndex((el) => el._id === action.payload);
-      let qty = state.cartItem[index].qty;
-      if (qty > 1) {
-        const qtyDec = ++qty;
-        state.cartItem[index].qty = qtyDec;
-
-        const price = state.cartItem[index].price;
-        const total = price * qtyDec;
-
-        state.cartItem[index].total = total;
+      const index = state.cartItems.findIndex((el) => el._id === action.payload);
+      if (index !== -1 && state.cartItems[index].qty > 1) {
+        state.cartItems[index].qty -= 1;
+        state.cartItems[index].total = state.cartItems[index].price * state.cartItems[index].qty;
       }
+    },
+    clearCart: (state, action) => {
+      state.cartItems = [];
     },
   },
 });
@@ -56,6 +48,7 @@ export const {
   deleteCartItem,
   increaseQty,
   decreaseQty,
+  clearCart,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

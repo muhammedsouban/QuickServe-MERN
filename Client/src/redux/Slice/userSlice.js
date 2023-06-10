@@ -1,10 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  username: "",
-  email: "",
-  mobile: "",
-  password: ""
+  data: []
 };
 
 const userSlice = createSlice({
@@ -13,11 +10,12 @@ const userSlice = createSlice({
   reducers: {
     userData: (state, action) => {
       const { field, value } = action.payload;
+      console.log(action);
       state[field] = value;
     },
     resetUserState: () => initialState
   }
 });
 
-export const { userData,resetUserState } = userSlice.actions;
+export const { userData, resetUserState } = userSlice.actions;
 export default userSlice.reducer;

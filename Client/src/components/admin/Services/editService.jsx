@@ -5,7 +5,7 @@ import { BiArrowBack } from 'react-icons/bi';
 import './addservice.css';
 import { editService, getCategories, updateService } from '../../../Api/AdminAPI';
 
-const EditServiceModel = ({ open, serviceId }) => {
+const EditServiceModel = ({ open, serviceId,Services }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
     const dispatch = useDispatch();

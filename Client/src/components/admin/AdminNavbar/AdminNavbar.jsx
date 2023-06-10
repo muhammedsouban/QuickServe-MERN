@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 import { MdPerson, MdCategory, MdMiscellaneousServices, MdOutlineLogout } from 'react-icons/md';
 import { BsPersonGear } from 'react-icons/bs';
 import { RiDashboardFill } from 'react-icons/ri';
 import { GoFileMedia } from 'react-icons/go';
 import { AiOutlineCalendar } from 'react-icons/ai';
+import { GiModernCity } from 'react-icons/gi'
 
 const AdminNavbar = () => {
   const [nav, setNav] = useState(false);
-  const headers = { Authorization: `Bearer ${localStorage.getItem('userToken')}` };
+  const Navigate = useNavigate()
 
   const closeSidebar = () => {
     setNav(false);
@@ -23,19 +24,24 @@ const AdminNavbar = () => {
     event.target.style.color = 'inherit';
   };
 
+  const Logout = () => {
+    localStorage.removeItem('token');
+    Navigate('/admin/login')
+  }
+
   return (
     <div className='fixed top-0 navbar flex justify-between items-center p-4 text-white z-10'>
       <div className='flex items-center'>
-      <div className='block lg:hidden' onClick={() => setNav(!nav)}>
+        <div className='block lg:hidden' onClick={() => setNav(!nav)}>
           <AiOutlineMenu size={30} />
         </div>
         <div className='block'>
-          
+
           <h1 className='text-2xl sm:text-3xl lg:text-4xl px-2'>
             Quick <span className='font-bold'>Serve</span>
           </h1>
         </div>
-      
+
       </div>
 
       {nav ? <div className='bg-black/80 fixed w-full h-screen z-10 top-0 left-0'></div> : ''}
@@ -49,10 +55,10 @@ const AdminNavbar = () => {
           size={30}
           className='block absolute left-4 top-4 lg:hidden cursor-pointer'
         />
-      <h2 className='block lg:hidden ml-16 text-2xl p-4'>
+        <h2 className='block lg:hidden ml-16 text-2xl p-4'>
           Quick <span className='font-bold'>Serve</span>
         </h2>
-       
+
         <nav>
           <ul className='flex flex-col text-white'>
             <NavLink to={'/admin/dashboard'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
@@ -97,12 +103,18 @@ const AdminNavbar = () => {
                 Bookings
               </li>
             </NavLink>
-            <NavLink to={'/admin/login'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
+            <NavLink to={'/admin/city'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
               <li className='text-xl py-4 flex'>
-                <MdOutlineLogout size={25} className='mr-4 ml-4' />
-                Logout
+                <GiModernCity size={25} className='mr-4 ml-4' />
+                City
               </li>
             </NavLink>
+
+            <li onClick={Logout} className='text-xl py-4 flex'>
+              <MdOutlineLogout size={25} className='mr-4 ml-4' />
+              Logout
+            </li>
+
           </ul>
         </nav>
       </div>

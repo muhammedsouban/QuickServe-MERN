@@ -10,7 +10,7 @@ import locationReducer from "./Slice/locationSlice";
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: ["user","cart","location"],
+    whitelist: ["user","location"],
 };
 
 const rootReducer = combineReducers({
