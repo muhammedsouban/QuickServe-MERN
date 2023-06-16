@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './categorylist.css'
 import { getCategories } from '../../Api/AdminAPI';
-
+import BASE_URL from '../../config/config';
 const CategorySlider = () => {
   const [category, setCategory] = useState([])
 
@@ -55,7 +55,7 @@ const CategorySlider = () => {
                <Link to={`/services/${category.categoryName}`}> 
               <div className="flex flex-col items-center mx-2">
                 <img
-                  src={`http://localhost:8080/public/images/${category.image}`}
+                  src={`${BASE_URL}/public/images/${category.image}`}
                   alt={category.categoryName}
                   className="w-40 h-40 object-contain rounded-full"
                 />

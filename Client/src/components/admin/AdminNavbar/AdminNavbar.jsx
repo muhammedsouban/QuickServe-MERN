@@ -61,7 +61,7 @@ const AdminNavbar = () => {
 
         <nav>
           <ul className='flex flex-col text-white'>
-            <NavLink to={'/admin/dashboard'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
+            <NavLink to={'/admin/'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
               <li className='text-xl py-4 flex'>
                 <RiDashboardFill size={25} className='mr-4 ml-4' />
                 Dashboard
@@ -110,7 +110,7 @@ const AdminNavbar = () => {
               </li>
             </NavLink>
 
-            <li onClick={Logout} className='text-xl py-4 flex'>
+            <li onClick={Logout} className='text-xl py-4 flex cursor-pointer'>
               <MdOutlineLogout size={25} className='mr-4 ml-4' />
               Logout
             </li>

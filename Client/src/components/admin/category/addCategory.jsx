@@ -38,8 +38,8 @@ const AddCategoryModel = ({ onClose, category }) => {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
       const response = await addCategory(formData, headers)
       if (response) {
-        window.location.reload();
         toast.success('category added successfully');
+        onClose();
 
       } else {
         alert(response.message);

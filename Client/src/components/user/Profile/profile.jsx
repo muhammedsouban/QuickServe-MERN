@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getProfile } from '../../../Api/userAPI';
 import {TfiEmail} from 'react-icons/tfi'
 import { BiPhoneCall } from 'react-icons/bi';
+import BASE_URL from '../../../config/config';
 const Profile = () => {
     const [profile, setProfile] = useState([])
     const headers = { Authorization: `Bearer ${localStorage.getItem('userToken')}` };
@@ -29,7 +30,7 @@ const Profile = () => {
                                     <img
                                         alt="avatar"
                                         className="w-44 h-44 rounded-md border-2 border-gray-300"
-                                        src={`http://localhost:8080/public/images/${profile.image}`}
+                                        src={`${BASE_URL}/public/images/${profile.image}`}
                                     />
                                 </div>
                                 <div>

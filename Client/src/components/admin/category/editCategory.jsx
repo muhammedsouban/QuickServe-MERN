@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BiArrowBack } from 'react-icons/bi';
 import { editCategory, updateCategory } from '../../../Api/AdminAPI';
-
+import BASE_URL from '../../../config/config';
 const EditCategoryModel = ({ open, Id }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
@@ -41,7 +41,7 @@ const EditCategoryModel = ({ open, Id }) => {
             const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
             const response = await updateCategory(Id, formData, headers)
             if (response) {
-                window.location.reload();
+                open(false);
             } else {
                 alert(response.message);
             }
@@ -68,7 +68,7 @@ const EditCategoryModel = ({ open, Id }) => {
                         {previewImage ? (
                             <img src={previewImage} className="profile_img" alt="Service" />
                         ) : (
-                            <img src={`http://localhost:8080/public/images/${categoryImage}`} className="profile_img" alt="Service" />
+                            <img src={`${BASE_URL}/public/images/${categoryImage}`} className="profile_img" alt="Service" />
                         )}
                     </div>
 

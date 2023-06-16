@@ -11,7 +11,6 @@ function BlockUser({ open, userId, block }) {
         try {
             await HandleUserblock(userId,block, headers);
             open(false);
-            window.location.reload();
         } catch (error) {
             console.log(error);
         }
@@ -37,7 +36,7 @@ function BlockUser({ open, userId, block }) {
                         onClick={performAction}
                         className="bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2  border border-red-500 hover:border-transparent w-24  text-center rounded"
                     >
-                        {block ? 'Unblock' : 'Block'}
+                        {block ?  'Block':'Unblock'}
                     </button>
                 </div>
             </div>

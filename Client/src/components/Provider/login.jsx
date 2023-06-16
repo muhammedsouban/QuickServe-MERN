@@ -2,6 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useState } from 'react';
 import '../admin/Login/login.css'
+import { toast } from 'react-hot-toast';
+import BASE_URL from '../../config/config';
 
 function ProviderLogin() {
   const [password, setPassword] = useState('');
@@ -12,12 +14,12 @@ function ProviderLogin() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:8080/provider/login`, { email, password });
+      const response = await axios.post(`${BASE_URL}/provider/login`, { email, password });
       if (response.data && response.data.email) {
         localStorage.setItem('ProviderToken', response.data.token);
         navigate('/provider/');
       } else {
-        alert(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);

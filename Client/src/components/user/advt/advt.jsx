@@ -1,16 +1,20 @@
-import React from 'react'
-
-function Advt() {
-    return (
-        <div className='flex justify-center mt-20'>
-            <div className='bg-blue-300 w-[64%] h-[200px]'>
-                <div className='text-center mt-5 w-full h-14'>
-                    <p className='text-lg'>advertise here</p>
-                    <img src="" alt="" />
-                </div>
-            </div>
-        </div>
-    )
+import React from 'react';
+import { Link } from 'react-router-dom'
+import BASE_URL from '../../../config/config';
+function Advt({ data }) {
+  return (
+    <div className='flex justify-center mt-20'>
+         <div className='w-[64%] h-[150px] flex items-center'>
+      <Link to={'/services'}>
+        <img
+          src={`${BASE_URL}/public/images/${data.image}`}
+          className='object-contain w-full h-full'
+          alt='advt'
+        />
+      </Link>
+      </div>
+    </div>
+  );
 }
 
-export default Advt
+export default Advt;

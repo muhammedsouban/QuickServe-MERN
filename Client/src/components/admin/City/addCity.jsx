@@ -24,7 +24,7 @@ const AddCityModel = ({ onClose, City }) => {
             const response = await addCity(cityName, headers);
             if (response) {
                 toast.success('city added succesfully')
-                window.location.reload();
+                onClose();
             } else {
                 toast(response.message);
             }

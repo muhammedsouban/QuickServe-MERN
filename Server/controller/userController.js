@@ -6,7 +6,9 @@ import mongoose from 'mongoose';
 import Admin from "../models/adminModel.js";
 import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageMode.js";
-
+import Media from "../models/mediaModel.js"
+import Review from "../models/reviewModel.js";
+import Service from '../models/serviceModel.js'
 export const login = async () => {
     try {
         console.log("logged in");
@@ -219,7 +221,22 @@ export const addAddress = async (req, res) => {
         console.log(error);
     }
 };
+export const DeleteAddress = async (req, res) => {
+    try {
+        console.log('helo');
+        const userId = new mongoose.Types.ObjectId(req.user.id);
 
+        const userData = await User.findByIdAndUpdate({ _id: userId }, {
+            $pull: {
+                Address: { id: new mongoose.Types.ObjectId(req.params.id) }
+            }
+        })
+        console.log(userData);
+        res.json(userData)
+    } catch (error) {
+        console.log(error)
+    }
+}
 export const getaddress = async (req, res) => {
     try {
         const userId = new mongoose.Types.ObjectId(req.user.id);
@@ -230,22 +247,42 @@ export const getaddress = async (req, res) => {
         console.log(error);
     }
 }
+function generateBookingId() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const digits = '0123456789';
+
+    const letter = letters[Math.floor(Math.random() * letters.length)];
+    let digitsPart = '';
+
+    for (let i = 0; i < 6; i++) {
+        const digit = digits[Math.floor(Math.random() * digits.length)];
+        digitsPart += digit;
+    }
+
+    return letter + digitsPart;
+}
 
 export const AddBooking = async (req, res) => {
     try {
 
         const data = req.body
+        console.log(data);
+        const bookingId = generateBookingId();
         const newBooking = new Booking({
+            BookingID: bookingId,
             userId: data.userId,
             services: data.service.map((service) => ({
                 serviceId: service._id,
                 quantity: service.qty,
+                status: 'Pending',
+
             })),
             date: new Date(data.dateTime[0]),
             startTime: data.dateTime[1],
             totalPrice: data.totalPrice,
             address: data.address,
             status: 'Pending'
+
         });
         const BookingData = await newBooking.save();
         const user = await User.findOne({ _id: data.userId })
@@ -282,7 +319,6 @@ export const getBookings = async (req, res) => {
         ]).exec();
 
 
-        console.log(bookings);
         res.status(200).json(bookings);
     } catch (error) {
         console.log(error);
@@ -333,32 +369,118 @@ export const createConversation = async (req, res) => {
 
 export const getChat = async (req, res) => {
     try {
-      const userId = new mongoose.Types.ObjectId(req.user.id);
-  
-      const chatData = await Conversation.aggregate([
-        {
-          $match: {
-            user_id: userId
-          }
-        },
-        {
-          $lookup: {
-            from: 'messages',
-            localField: '_id',
-            foreignField: 'conversationId',
-            as: 'messages'
-          }
+        const userId = new mongoose.Types.ObjectId(req.user.id);
+
+        const chatData = await Conversation.aggregate([
+            {
+                $match: {
+                    user_id: userId
+                }
+            },
+            {
+                $lookup: {
+                    from: 'messages',
+                    localField: '_id',
+                    foreignField: 'conversationId',
+                    as: 'messages'
+                }
+            }
+        ]);
+
+        if (chatData.length === 0) {
+            res.json(null);
+        } else {
+            const chat = chatData[0];
+            res.json(chat);
         }
-      ]);
-  
-      if (chatData.length === 0) {
-        res.json(null);
-      } else {
-        const chat = chatData[0];
-        res.json(chat);
-      }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to retrieve chat data' });
+        console.error(error);
+        res.status(500).json({ error: 'Failed to retrieve chat data' });
     }
-  };
+};
+
+export const getMedia = async (req, res) => {
+    try {
+        const media = await Media.find().lean()
+        res.json(media[0]);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const AddReview = async (req, res) => {
+    try {
+        const { userId, rating, feedback, serviceIDs } = req.body.data;
+
+        const review = new Review({
+            userId,
+            rating,
+            feedback,
+            services: serviceIDs.map((item) => ({ serviceId: item._id })),
+        });
+
+        await review.save();
+
+        res.status(200).json({ message: 'Review saved successfully' });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error saving review' });
+    }
+};
+
+export const serviceDetails = async (req, res) => {
+    try {
+        const serviceData = await Service.findOne({ _id: new mongoose.Types.ObjectId(req.params.serviceId) })
+        res.status(200).json(serviceData);
+    } catch (error) {
+        console.log(error);
+
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+export const getReview = async (req, res) => {
+    const { serviceId } = req.params;
+    try {
+        const Reviews = await Review.aggregate([
+            {
+                $match: {
+                    "services.serviceId": new mongoose.Types.ObjectId(serviceId)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'user'
+                }
+            },
+            {
+                $unwind: '$user'
+            },
+            {
+                $project: {
+                    _id: 1,
+                    rating: 1,
+                    feedback: 1,
+                    date:1,
+                    user: {
+                        username: 1,
+                        image:1
+                    }
+                }
+            }
+        ]);
+
+        console.log(Reviews);
+        res.status(200).json(Reviews);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+
+
+

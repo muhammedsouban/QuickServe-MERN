@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { ApproveProvider, UnBlockProvider, blockProvider, getProvider } from '../../../Api/AdminAPI';
-
+import BASE_URL from '../../../config/config';
 const ProviderCard = () => {
     const [providers, setProviders] = useState([]);
     const [searchInput, setSearchInput] = useState('');
+    const [status, setStatus] = useState(false)
     const [filter, setFilter] = useState('all');
 
     const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
@@ -13,7 +14,7 @@ const ProviderCard = () => {
         ApproveProvider(providerId, headers)
             .then((res) => {
                 if (res) {
-                    window.location.reload();
+                    setStatus(!status)
                 }
             })
             .catch((error) => {
@@ -24,7 +25,7 @@ const ProviderCard = () => {
     const handleBlock = (providerId) => {
         blockProvider(providerId, headers)
             .then((res) => {
-                window.location.reload()
+                setStatus(!status)
             })
             .catch((error) => {
                 console.log(error);
@@ -35,7 +36,7 @@ const ProviderCard = () => {
         UnBlockProvider(providerId, headers)
             .then((res) => {
                 if (res) {
-                    window.location.reload()
+                    setStatus(!status)
                 }
             })
             .catch((error) => {
@@ -51,7 +52,7 @@ const ProviderCard = () => {
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
+    }, [status]);
 
     const filteredProviders = providers.filter((provider) => {
         const { providername, isApproved, isBlock } = provider;
@@ -73,46 +74,46 @@ const ProviderCard = () => {
             <div className="flex justify-center">
                 <div>
                     <section className="container py-4 mx-auto">
-                        <div class="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
-                            <div class="flex mt-2" >
+                        <div className="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
+                            <div className="flex mt-2" >
                                 <input
                                     type="text"
                                     placeholder="Search by name"
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     value={searchInput}
-                                    class="w-full px-3 h-10 rounded-l border-2 border-blue-900 focus:outline-none focus:border-blue-500"
+                                    className="w-full px-3 h-10 rounded-l border-2 border-blue-900 focus:outline-none focus:border-blue-500"
                                 />
                                 <button
                                     type="submit"
-                                    class="bg-blue-900 h-10 text-white rounded-r px-2 md:px-3  py-0 md:py-1"
+                                    className="bg-blue-900 h-10 text-white rounded-r px-2 md:px-3  py-0 md:py-1"
                                 >
                                     Search
                                 </button>
                             </div>
-                            <div class="flex lg:justify-end lg:self-start sm:justify-center sm:content-center mt-2 mb-4">
+                            <div className="flex lg:justify-end lg:self-start sm:justify-center sm:content-center mt-2 mb-4">
                                 <button
-                                    class={`button ${filter === 'all' ? 'active' : ''} border-2 p-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                                    className={`button ${filter === 'all' ? 'active' : ''} border-2 p-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
                                     onClick={() => setFilter('all')}
                                 >
                                     All
                                 </button>
 
                                 <button
-                                    class={`button ${filter === 'approved' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                                    className={`button ${filter === 'approved' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
                                     onClick={() => setFilter('approved')}
                                 >
                                     Approved
                                 </button>
 
                                 <button
-                                    class={`button ${filter === 'blocked' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                                    className={`button ${filter === 'blocked' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
                                     onClick={() => setFilter('blocked')}
                                 >
                                     Blocked
                                 </button>
 
                                 <button
-                                    class={`button ${filter === 'not-approved' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
+                                    className={`button ${filter === 'not-approved' ? 'active' : ''} border-2 p-2 ml-2 rounded-md border-blue-900 text-blue-900 focus:outline-none focus:bg-blue-900 focus:text-white`}
                                     onClick={() => setFilter('not-approved')}
                                 >
                                     Not Approved
@@ -133,7 +134,7 @@ const ProviderCard = () => {
                                             <img
                                                 alt="avatar"
                                                 className="w-14 h-14 rounded-full border-2 border-gray-300"
-                                                src={`http://localhost:8080/public/images/${provider.image}`}
+                                                src={`${BASE_URL}/public/images/${provider.image}`}
                                             />
                                             <h4 id="name" className="text-xl ml-5 font-semibold">
                                                 {provider.providername}

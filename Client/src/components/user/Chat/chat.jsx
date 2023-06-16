@@ -4,8 +4,9 @@ import { IoSendSharp } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import { getChat, sendMessage, startConversation } from '../../../Api/userAPI';
+import BASE_URL from '../../../config/config';
 
-function Chat() {
+function Chat({ action }) {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
@@ -15,7 +16,7 @@ function Chat() {
   const headers = { Authorization: `Bearer ${localStorage.getItem('userToken')}` };
 
   useEffect(() => {
-    const newSocket = io('http://localhost:8080');
+    const newSocket = io(BASE_URL);
     setSocket(newSocket);
     newSocket.emit('setup', user);
 
@@ -40,7 +41,7 @@ function Chat() {
     if (socket) {
       socket.on('message received', (newMessageReceived) => {
         setMessages([...messages, newMessageReceived]);
-        
+
       });
     }
   }, [socket, messages]);
@@ -71,10 +72,10 @@ function Chat() {
 
   return (
     <>
-      <div className="flex justify-center items-center">
-        <div className="bg-[#E8F5FF] max-w-[400px] sm:w-1/2 z-50 rounded-lg shadow-lg">
+      <div className="flex justify-center items-center fixed right-8 bottom-28 z-50 ">
+        <div className="bg-[#E8F5FF] rounded-lg shadow-lg">
           <div className="flex justify-between bg-white rounded-t-lg py-2">
-            <button className="top-0 relative left-5">
+            <button onClick={(() => action())} className="top-0 relative left-5">
               <BiArrowBack size={20} />
             </button>
             <div>
@@ -87,7 +88,6 @@ function Chat() {
             <div className="w-full px-2 flex flex-col justify-between overflow-auto scrollbar-thin">
               <div className="flex flex-col mt-5 h-96">
                 {conversationId ? (
-                  /* Chat body when conversation exists */
                   <>
                     <div className="flex justify-start mb-4">
                       <img
@@ -99,31 +99,13 @@ function Chat() {
                         Hey, How can I Help You
                       </div>
                     </div>
-                    {/* Chat messages container */}
                     <div className="">
                       {messages.map((message, index) => (
                         <div
                           key={index}
-                          className={`flex justify-${message.sender === user ? 'end' : 'start'
+                          className={`flex ${message.sender === user ? 'flex-row-reverse' : 'flex-row '
                             } mb-4`}
                         >
-                          {!message.sender === user ? (
-                            <img
-                              src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                              className="object-cover h-8 w-8 rounded-full"
-                              alt=""
-                            />
-                          ) : (
-                            ''
-                          )}
-                          <div
-                            className={`ml-2 py-3 px-4 max-w-4/6 bg-blue-900 rounded-br-xl rounded-tr-xl rounded-tl-xl text-white ${message.sender === user
-                              ? 'bg-green-900 mr-2 rounded-br-none rounded-tr-xl rounded-tl-xl rounded-bl-xl'
-                              : ''
-                              }`}
-                          >
-                            {message.message}
-                          </div>
                           {message.sender === user ? (
                             <img
                               src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
@@ -131,8 +113,22 @@ function Chat() {
                               alt=""
                             />
                           ) : (
-                            ''
+                            <img
+                              src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                              className="object-cover h-8 w-8 rounded-full"
+                              alt=""
+                            />
                           )}
+
+                          <div
+                            className={`ml-2 py-3 px-4 max-w-4/6 bg-blue-900  text-white ${message.sender === user
+                              ? 'bg-green-900 mr-2  rounded-br-none rounded-tr-xl rounded-tl-xl rounded-bl-xl'
+                              : 'rounded-br-xl rounded-tr-xl rounded-tl-xl'
+                              }`}
+                          >
+                            {message.message}
+                          </div>
+
                         </div>
                       ))}
                     </div>

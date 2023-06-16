@@ -3,6 +3,7 @@ import BlockUser from '../../comfirmations/BlockUser';
 import { getUsers } from '../../../Api/AdminAPI';
 import '../Services/Services.css'
 import Button from '@mui/material/Button';
+import BASE_URL from '../../../config/config';
 
 function UserList() {
     const [showBlockModal, setShowBlockModal] = useState(false);
@@ -16,7 +17,7 @@ function UserList() {
         getUsers(headers).then(data => {
             setUsers(data)
         })
-    }, [])
+    }, [showBlockModal])
 
     const handleBlock = (userId, isBlocked) => {
         setUserId(userId);
@@ -61,7 +62,7 @@ function UserList() {
                         <tbody >
                             {users.map(item => (
                                 <tr key={item._id}>
-                                    <td className="border px-4 py-2"><img className='w-[100px]' src={`http://localhost:8080/public/images/${item.image}`} alt="" /></td>
+                                    <td className="border px-4 py-2"><img className='w-[100px]' src={`${BASE_URL}/public/images/${item.image}`} alt="" /></td>
                                     <td className="border px-4 py-2">{item.username}</td>
                                     <td className="border px-4 py-2">{item.email}</td>
                                     <td className="border px-4 py-2">{item.mobile}</td>

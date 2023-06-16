@@ -9,6 +9,13 @@ providerRoute.post('/register', upload.single('image'), providerController.regis
 providerRoute.post('/login', providerController.providerLogin)
 providerRoute.get('/bookingRequests', verifyProviderToken, providerController.sendBookingRequest)
 providerRoute.get('/profile', verifyProviderToken, providerController.Profile)
-providerRoute.post('/acceptBooking', verifyProviderToken, providerController.acceptRequest)
+providerRoute.put('/acceptBooking', verifyProviderToken, providerController.acceptRequest)
+providerRoute.get('/upcoming', verifyProviderToken, providerController.upcomingJob)
+providerRoute.get('/completed', verifyProviderToken, providerController.completedBooking)
+
+providerRoute.post('/start-job', verifyProviderToken, providerController.startJob)
+providerRoute.get('/dashboard', verifyProviderToken, providerController.Dashboard)
+
+
 
 export default providerRoute

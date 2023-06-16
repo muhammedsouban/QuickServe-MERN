@@ -5,7 +5,7 @@ function ProviderAuth() {
     const location = useLocation();
     return (
         provider ? <Outlet />
-            : <Navigate to='/login' state={{ from: location }} replace />
+            : <Navigate to='/provider/login' state={{ from: location }} replace />
 
     );
 }

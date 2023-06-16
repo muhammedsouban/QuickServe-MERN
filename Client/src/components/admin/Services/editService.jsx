@@ -4,7 +4,8 @@ import { EditService, UpdateService } from '../../../redux/Slice/serviceEditSlic
 import { BiArrowBack } from 'react-icons/bi';
 import './addservice.css';
 import { editService, getCategories, updateService } from '../../../Api/AdminAPI';
-
+import { toast } from 'react-hot-toast';
+import BASE_URL from '../../../config/config';
 const EditServiceModel = ({ open, serviceId,Services }) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
@@ -67,14 +68,15 @@ const EditServiceModel = ({ open, serviceId,Services }) => {
 
                 if (data) {
                     dispatch(UpdateService());
-                    window.location.reload();
+                    open(false);
+
                 } else {
-                    alert(data.message);
+                    toast(data.message);
                 }
             })
         } catch (error) {
             console.log(error);
-            alert(error.data.message);
+            toast(error.data.message);
         }
     };
 
@@ -92,7 +94,7 @@ const EditServiceModel = ({ open, serviceId,Services }) => {
                         {previewImage ? (
                             <img src={previewImage} className="profile_img" alt="Service" />
                         ) : (
-                            <img src={`http://localhost:8080/public/images/${service.image}`} className="profile_img" alt="Service" />
+                            <img src={`${BASE_URL}/public/images/${service.image}`} className="profile_img" alt="Service" />
                         )}
                     </div>
 

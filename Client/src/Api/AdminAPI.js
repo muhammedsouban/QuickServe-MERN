@@ -109,12 +109,28 @@ export const addMediaCards = async (FormData) => {
     const res = Axiosadmin.post('/media-card', FormData)
     return res
 }
+export const fetchCard=async(Id)=>{
+    const res = await Axiosadmin.get(`/media-card/${Id}`)
+    return res.data
+}
+export const updateCard=async(Id,FormData)=>{
+    const res = await Axiosadmin.put(`/media-card/${Id}`,FormData)
+    return res
+}
 export const deleteMediaCards = async (id) => {
     const res = Axiosadmin.delete(`/media-card/${id}`,)
     return res
 }
 export const addAdvertisement = async (FormData) => {
     const res = Axiosadmin.post('/media-add', FormData)
+    return res
+}
+export const fetchAdvt=async(Id)=>{
+    const res = await Axiosadmin.get(`/media-add/${Id}`)
+    return res.data
+}
+export const updateAdvt=async(Id,formData)=>{
+    const res = await Axiosadmin.put(`/media-add/${Id}`,formData)
     return res
 }
 
@@ -125,6 +141,14 @@ export const deleteAdvertisement = async (id) => {
 
 export const addBanner = async (FormData) => {
     const res = Axiosadmin.post('/media-banner', FormData)
+    return res
+}
+export const fetchBanner=async(Id)=>{
+    const res = await Axiosadmin.get(`/media-banner/${Id}`)
+    return res.data
+}
+export const updateBanner=async(Id,FormData)=>{
+    const res = await Axiosadmin.put(`/media-banner/${Id}`,FormData)
     return res
 }
 export const deleteBanner = async (id) => {
@@ -149,5 +173,10 @@ export const getChat = async (headers) => {
 
 export const getConversation = async (userId,headers) => {
     const res = Axiosadmin.get(`/conversation/${userId}`, { headers })
+    return res
+}
+
+export const AdminDashboard = async (headers) => {
+    const res = await Axiosadmin.get('/dashboard', { headers })
     return res
 }

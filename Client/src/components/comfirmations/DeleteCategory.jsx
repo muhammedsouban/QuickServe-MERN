@@ -11,7 +11,6 @@ function DeleteCategory({ open, Id }) {
         const res = deleteCategory(Id, headers)
         if (res) {
             open(false);
-            window.location.reload()
         }
     };
 

@@ -307,6 +307,56 @@ export const AddMediaCards = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+export const getMediaCard = async (req, res) => {
+    try {
+        const cardId = req.params.id;
+        const media = await Media.findOne({ 'Cards._id': cardId });
+
+        if (!media) {
+            return res.status(404).json({ message: 'Media card not found' });
+        }
+        const card = media.Cards.find((card) => card._id.toString() === cardId);
+        res.status(200).json(card);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const updateMediaCard = async (req, res) => {
+    try {
+        const cardId = req.params.id;
+        const { title } = req.body;
+        const fileNames = req.files.map((file) => ({
+            image: file.filename,
+            _id: new mongoose.Types.ObjectId()
+        }));
+
+        const updateData = {
+            $set: {
+                'Cards.$.title': title,
+                'Cards.$.images': fileNames,
+            },
+        };
+
+        const updatedMedia = await Media.findOneAndUpdate(
+            { 'Cards._id': cardId },
+            updateData,
+            { new: true }
+        );
+
+        if (!updatedMedia) {
+            return res.status(404).json({ message: 'Media card not found' });
+        }
+
+        res.status(200).json({ message: 'Media card updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
 export const deleteMediaCards = async (req, res) => {
     try {
         const cardId = req.params.id;
@@ -338,6 +388,35 @@ export const addAdvertisement = async (req, res) => {
         res.status(200).json({ message: 'media added successfully' });
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const editAdvt = async (req, res) => {
+    try {
+        const AddId = req.params.id;
+        const { filename } = req.file;
+
+        await Media.updateOne(
+            { 'Adds._id': AddId },
+            { $set: { 'Adds.$.image': filename } }
+        );
+
+        res.status(200).json({ message: 'Add image updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const getAdvt = async (req, res) => {
+    try {
+        const AddId = req.params.id;
+        const add = await Media.findOne({ 'Adds._id': AddId }, { 'Adds.$': 1 });
+        const { image } = add.Adds[0];
+        res.status(200).json({ image });
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
@@ -396,6 +475,34 @@ export const deleteBanner = async (req, res) => {
 
 
 
+export const editBanner = async (req, res) => {
+    try {
+        const bannerId = req.params.id;
+        const { filename } = req.file;
+      const media=  await Media.updateOne(
+            { 'banner._id': bannerId },
+            { $set: { 'banner.$.image': filename } }
+        );
+        res.status(200).json({ message: 'Banner image updated successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+export const getBanner = async (req, res) => {
+    try {
+        const bannerId = req.params.id;
+        const banner = await Media.findOne({ 'banner._id': bannerId }, { 'banner.$': 1 });
+        const { image } = banner.banner[0];
+        res.status(200).json({ image });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
 export const getMedia = async (req, res) => {
     try {
         const mediaData = await Media.find().lean()
@@ -426,7 +533,7 @@ export const bookings = async (req, res) => {
                 }
             }
         ]).exec();
-
+        console.log(Bookingdata);
         res.json(Bookingdata)
     } catch (error) {
         console.log(error);
@@ -500,3 +607,39 @@ export const getConversation = async (req, res) => {
         res.status(500).json({ error: 'Failed to retrieve chat data' });
     }
 };
+
+
+export const Dashboard = async (req, res) => {
+    try {
+        const users = await User.find().countDocuments();
+        const providers = await Provider.find().countDocuments();
+        const allBookings = await Booking.find();
+
+        const currentMonth = new Date().getMonth();
+        const earningsByMonth = Array.from({ length: currentMonth + 1 }, () => 0);
+        allBookings.forEach(booking => {
+            if (booking.status === 'Completed') {
+                const month = new Date(booking.date).getUTCMonth();
+                earningsByMonth[month] += booking.totalPrice;
+            }
+        });
+
+        const bookingsCountByMonth = allBookings.reduce((counts, booking) => {
+            if (booking.status === 'Completed') {
+                const month = new Date(booking.date).getMonth();
+                const completedServicesCount = booking.services.length;
+                counts[month] = (counts[month] || 0) + completedServicesCount;
+            }
+            return counts;
+        }, []);
+
+        const totalBookings = bookingsCountByMonth.reduce((acc, curr) => acc + curr);
+        const earnings = earningsByMonth.reduce((acc, curr) => acc + curr)
+
+        res.status(200).json({ users, providers, totalBookings, earnings, earningsByMonth, bookingsCountByMonth });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to retrieve dashboard data' });
+    }
+};
+

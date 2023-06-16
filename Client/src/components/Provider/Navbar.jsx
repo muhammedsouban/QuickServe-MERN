@@ -58,7 +58,7 @@ const ProviderNavbar = () => {
 
         <nav>
           <ul className='flex flex-col text-white mt-5'>
-          <NavLink to={'/provider/dashboard'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
+          <NavLink to={'/provider/'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
             <li className='text-xl py-4 flex'>
               <RiDashboardFill size={25} className='mr-4 ml-4' />
               Dashboard
@@ -76,14 +76,14 @@ const ProviderNavbar = () => {
               Requests
             </li>
           </NavLink>
-          <NavLink to={'/provider/service'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
+          <NavLink to={'/provider/upcoming'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
             <li className='text-xl py-4 flex'>
               <MdPendingActions size={25} className='mr-4 ml-4' />
-              Pending
+              Upcoming
             </li>
           </NavLink>
        
-          <NavLink to={'/provider/bookings'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
+          <NavLink to={'/provider/completed'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
             <li className='text-xl py-4 flex'>
               <MdOutlineDoneAll size={25} className='mr-4 ml-4' />
               Completed

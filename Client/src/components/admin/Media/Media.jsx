@@ -3,13 +3,21 @@ import AddAdvertisement from './Advertisement';
 import AddBanner from './Banner';
 import MediaCard from './MediaCards';
 import { deleteAdvertisement, deleteBanner, deleteMediaCards, getMedia } from '../../../Api/AdminAPI';
-import { Axiosuser } from '../../../axios';
+import EditAdvt from './EditMedia/Advt';
+import EditBanner from './EditMedia/banner';
+import EditMediaCard from './EditMedia/Cards';
+import BASE_URL from '../../../config/config';
 
 function Media() {
     const [cardModel, setCardModel] = useState(false);
     const [AddModel, setAddModel] = useState(false);
     const [BannerModel, setBannerModel] = useState(false);
+    const [editcardModel, setEditCardModel] = useState(false);
+    const [editModel, setEditModel] = useState(false);
+    const [editBannerModel, setEditBannerModel] = useState(false);
     const [media, setMedia] = useState([])
+    const [id, setId] = useState()
+
     const handlecardModel = () => {
         setCardModel(!cardModel);
     };
@@ -20,50 +28,64 @@ function Media() {
 
     const handleBannerModel = () => {
         setBannerModel(!BannerModel);
+
     };
-   
+    const handleEditcardModel = (id) => {
+        setEditCardModel(!editcardModel);
+        setId(id)
+    };
+
+    const handleEditModel = (id) => {
+        setEditModel(!editModel);
+        setId(id)
+    };
+
+    const handleEditBannerModel = (id) => {
+        setEditBannerModel(!editBannerModel);
+        setId(id)
+    };
 
     const deleteCard = (id) => {
         deleteMediaCards(id)
-          .then(() => {
-            getMedia().then((res) => {
-              setMedia(res.data);
+            .then(() => {
+                getMedia().then((res) => {
+                    setMedia(res.data);
+                });
+            })
+            .catch((error) => {
+                console.error('Error deleting media card:', error);
             });
-          })
-          .catch((error) => {
-            console.error('Error deleting media card:', error);
-          });
-      };
-      
-      const deletebanner = (id) => {
+    };
+    
+    const deletebanner = (id) => {
         deleteBanner(id)
-          .then(() => {
-            getMedia().then((res) => {
-              setMedia(res.data);
+            .then(() => {
+                getMedia().then((res) => {
+                    setMedia(res.data);
+                });
+            })
+            .catch((error) => {
+                console.error('Error deleting banner:', error);
             });
-          })
-          .catch((error) => {
-            console.error('Error deleting banner:', error);
-          });
-      };
-      
-      const deleteAdd = (id) => {
+    };
+
+    const deleteAdd = (id) => {
         deleteAdvertisement(id)
-          .then(() => {
-            getMedia().then((res) => {
-              setMedia(res.data);
+            .then(() => {
+                getMedia().then((res) => {
+                    setMedia(res.data);
+                });
+            })
+            .catch((error) => {
+                console.error('Error deleting advertisement:', error);
             });
-          })
-          .catch((error) => {
-            console.error('Error deleting advertisement:', error);
-          });
-      };
-      
+    };
+
     useEffect(() => {
         getMedia().then((res) => {
             setMedia(res.data)
         })
-    }, [BannerModel, AddModel, cardModel])
+    }, [BannerModel, AddModel, cardModel,editcardModel,editBannerModel,editModel])
 
     return (
         <>
@@ -86,7 +108,7 @@ function Media() {
                                     {item.images.map((image) => (<div key={image._id} className="w-full">
                                         <img
                                             className="object-contain"
-                                            src={`http://localhost:8080/public/images/${image.image}`}
+                                            src={`${BASE_URL}/public/images/${image.image}`}
                                             alt="Image 1"
                                         />
                                     </div>))}
@@ -95,7 +117,7 @@ function Media() {
                             </div>
                         </div>
                         <div className='grid grid-cols-2 gap-3 mx-2 mb-2'>
-                            <button className="w-full text-white font-bold bg-green-600 py-2 px-4 rounded">
+                            <button onClick={(() => handleEditcardModel(item._id))} className="w-full text-white font-bold bg-green-600 py-2 px-4 rounded">
                                 Edit
                             </button>
                             <button onClick={(() => deleteCard(item._id))} className="w-full text-white font-bold bg-red-600 py-2 px-4 rounded">
@@ -118,12 +140,12 @@ function Media() {
                             <div className="h-32 flex">
                                 <img
                                     className="object-contain"
-                                    src={`http://localhost:8080/public/images/${item.image}`}
+                                    src={`${BASE_URL}/public/images/${item.image}`}
                                     alt="Image 1"
                                 />
                             </div>
                             <div className=" px-2 mx-2 my-2">
-                                <button className="bg-green-500 mb-3 text-white font-bold py-2 px-4 rounded">
+                                <button onClick={(() => handleEditModel(item._id))} className="bg-green-500 mb-3 text-white font-bold py-2 px-4 rounded">
                                     Edit
                                 </button>
                                 <button onClick={(() => deleteAdd(item._id))} className="bg-red-500 text-white font-bold py-2 px-4 rounded">
@@ -145,13 +167,13 @@ function Media() {
                             <div className="w-full">
                                 <img
                                     className="w-full h-auto"
-                                    src={`http://localhost:8080/public/images/${item.image}`}
+                                    src={`${BASE_URL}/public/images/${item.image}`}
 
                                     alt="Image 1"
                                 />
                             </div>
                             <div className=" px-2  mx-2 my-2">
-                                <button className="w-full bg-green-500 mb-3 text-white font-bold py-2 px-4 rounded">
+                                <button onClick={(() => handleEditBannerModel(item._id))} className="w-full bg-green-500 mb-3 text-white font-bold py-2 px-4 rounded">
                                     Edit
                                 </button>
                                 <button onClick={(() => deletebanner(item._id))} className="w-full bg-red-500 text-white font-bold py-2 px-4 rounded">
@@ -180,6 +202,32 @@ function Media() {
                 <div className="modal-overlay">
                     <AddBanner
                         close={handleBannerModel}
+                    />
+                </div>
+            )}
+            {editcardModel && (
+                <div className="modal-overlay">
+                    <EditMediaCard
+                        onClose={handleEditcardModel}
+                        Id={id}
+
+                    />
+                </div>
+            )}
+            {editModel && (
+                <div className="modal-overlay">
+                    <EditAdvt
+                        close={handleEditModel}
+                        Id={id}
+
+                    />
+                </div>
+            )}
+            {editBannerModel && (
+                <div className="modal-overlay">
+                    <EditBanner
+                        close={handleEditBannerModel}
+                        Id={id}
                     />
                 </div>
             )}

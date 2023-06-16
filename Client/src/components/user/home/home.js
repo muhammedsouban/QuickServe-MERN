@@ -1,32 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import '../../../components/user/home/home.css'
-import Navbar from "../Navbar/Navbar";
+import "../../../components/user/home/home.css";
 import Hero from "../Hero/hero";
-import ServiceCard from "../servicecard";
 import CategorySlider from "../Categorylist";
 import MyCard from "./specialCards";
-import axios from "axios";
 import Advt from "../advt/advt";
-import { Location } from "../../../redux/Slice/locationSlice";
+import { getMedia } from "../../../Api/userAPI";
 function Home() {
-  const [show, setShow] = useState()
-  const dispatch = useDispatch()
+  const [media, setMedia] = useState(null);
 
+  useEffect(() => {
+    const fetchMedia = async () => {
+      try {
+        await getMedia().then(response => {
+          setMedia(response.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
+    fetchMedia();
+  }, []);
 
   return (
     <div>
-      <Navbar />
-      <Hero />
-      <CategorySlider />
-      <MyCard/>
-      <Advt/>
-      <MyCard/>
-      <Advt/>
+      {media && (
+        <div>
+          <Hero />
+          <CategorySlider />
+          <MyCard data={media.Cards[0]} />
+          <Advt data={media.Adds[0]}/>
+          <MyCard data={media.Cards[1]} />
+          <Advt data={media.Adds[1]}/>
+        </div>
+      )}
     </div>
-
   );
 }
 

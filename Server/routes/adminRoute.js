@@ -31,12 +31,18 @@ adminRoute.post('/city', verifyAdminToken, adminController.addCity)
 adminRoute.delete('/city/:cityId', verifyAdminToken, adminController.deleteCity)
 
 adminRoute.post('/media-card', upload.array('images'), adminController.AddMediaCards)
+adminRoute.put('/media-card/:id', upload.array('images'), adminController.updateMediaCard)
+adminRoute.get('/media-card/:id', adminController.getMediaCard)
 adminRoute.delete('/media-card/:id', adminController.deleteMediaCards)
 
 adminRoute.post('/media-add', upload.single('image'), adminController.addAdvertisement)
+adminRoute.put('/media-add/:id', upload.single('image'), adminController.editAdvt)
+adminRoute.get('/media-add/:id', adminController.getAdvt)
 adminRoute.delete('/media-add/:id', adminController.deleteAdvertisement)
 
 adminRoute.post('/media-banner', upload.single('image'), adminController.addBanner)
+adminRoute.get('/media-banner/:id', adminController.getBanner)
+adminRoute.put('/media-banner/:id', upload.single('image'), adminController.editBanner)
 adminRoute.delete('/media-banner/:id', adminController.deleteBanner)
 
 adminRoute.get('/media', adminController.getMedia)
@@ -45,8 +51,8 @@ adminRoute.get('/bookings', verifyAdminToken, adminController.bookings)
 
 adminRoute.get('/chat', verifyAdminToken, adminController.getChat)
 adminRoute.post('/chat', verifyAdminToken, adminController.AddChat)
-
-
 adminRoute.get('/conversation/:userId', verifyAdminToken, adminController.getConversation)
+
+adminRoute.get('/dashboard', verifyAdminToken, adminController.Dashboard)
 
 export default adminRoute

@@ -14,12 +14,18 @@ userRoute.get('/cart', verifyToken, userController.getCart)
 userRoute.delete('/cart/:serviceId', verifyToken, userController.RemoveCart)
 userRoute.post('/address', verifyToken, userController.addAddress)
 userRoute.get('/address', verifyToken, userController.getaddress)
+userRoute.delete('/address/:id', verifyToken, userController.DeleteAddress)
 userRoute.post('/booking', verifyToken, userController.AddBooking)
 userRoute.get('/profile', verifyToken, userController.Profile)
 userRoute.get('/bookings', verifyToken, userController.getBookings)
 userRoute.post('/chat', verifyToken, userController.AddChat)
 userRoute.post('/conversation', verifyToken, userController.createConversation)
 userRoute.get('/chat', verifyToken, userController.getChat)
+userRoute.get('/media', userController.getMedia)
+userRoute.post('/review', verifyToken, userController.AddReview)
+userRoute.get('/service/:serviceId', userController.serviceDetails)
+userRoute.get('/review/:serviceId', userController.getReview)
+
 
 
 

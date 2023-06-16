@@ -39,7 +39,10 @@ export const getAddress = async (headers) => {
     const res = await Axiosuser.get('/address', { headers })
     return res
 }
-
+export const deleteAddress = async (Id, headers) => {
+    const res = await Axiosuser.delete(`/address/${Id}`, { headers })
+    return res
+}
 export const AddBooking = async (data, headers) => {
     const res = await Axiosuser.post('/booking', data, { headers })
     return res
@@ -62,7 +65,7 @@ export const sendMessage = async (data, headers) => {
     return res
 }
 export const startConversation = async (data, headers) => {
-    const res = await Axiosuser.post('/conversation', {user:data}, { headers })
+    const res = await Axiosuser.post('/conversation', { user: data }, { headers })
     return res
 }
 
@@ -71,3 +74,22 @@ export const getChat = async (headers) => {
     return res
 }
 
+export const getMedia = async () => {
+    const res = await Axiosuser.get('/media')
+    return res
+}
+
+export const AddReview = async (data, headers) => {
+    const res = await Axiosuser.post('/review', { data }, { headers })
+    return res
+}
+
+export const getServiceDetails = async (serviceId) => {
+    const res = await Axiosuser.get(`/service/${serviceId}`)
+    return res
+}
+
+export const getReviews = async (serviceId) => {
+    const res = await Axiosuser.get(`/review/${serviceId}`)
+    return res
+}

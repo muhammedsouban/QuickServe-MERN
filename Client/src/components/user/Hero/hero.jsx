@@ -1,12 +1,12 @@
 import './hero.css'
 
 import React from 'react'
-
+import BASE_URL from '../../../config/config'
 function Hero() {
     return (
         <>
             <div className='hero'>
-                <img src="http://localhost:8080/public/images/Banner.JPG"
+                <img src={`${BASE_URL}/public/images/Banner.JPG`}
                     alt="" />
                     
                 <div className="hero-text text-start">

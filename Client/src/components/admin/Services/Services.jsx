@@ -5,16 +5,15 @@ import EditServiceModel from './editService'
 import { MdDelete, MdEdit } from 'react-icons/md'
 import { getServices } from '../../../Api/AdminAPI';
 import './Services.css'
+import BASE_URL from '../../../config/config'
 
 function Services() {
     const [showModal, setShowModal] = useState(false)
+    const [searchTerm, setSearchTerm] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [EditServiceId, setEditServiceId] = useState('');
-
-
     const [services, setServices] = useState([])
-
     const [deleteServiceId, setDeleteServiceId] = useState('');
 
     const handleDelete = (serviceId) => {
@@ -30,24 +29,27 @@ function Services() {
         getServices().then(data => {
             setServices(data)
         })
-    }, [])
+    }, [showModal,showDeleteModal,showEditModal])
 
 
     const handleEdit = (serviceId) => {
         setEditServiceId(serviceId);
         setShowEditModal(true);
     };
-
+    const filteredData = services.filter((item) =>
+    item.servicename.toLowerCase().includes(searchTerm.toLowerCase())
+  );
     return (
         <div>
             <div className="flex flex-col mx-auto max-w-screen-lg mt-10" >
 
                 <div className="flex justify-between items-center mb-4 px-6 md:px-0">
-                    <div className="relative z-[-1]">
-
+                    <div className="relative">
                         <input
                             type="text"
                             className="py-2 px-4 w-full md:w-72 border border-gray-400 rounded-lg pr-10 placeholder-gray-500 text-gray-900 focus:outline-none focus:border-blue-900"
+                            value={searchTerm}
+                            onChange={((e) => setSearchTerm(e.target.value))}
                             placeholder="Search..."
                         />
                         <div className="absolute inset-y-0 right-0 flex items-center px-2">
@@ -85,9 +87,9 @@ function Services() {
                             </tr>
                         </thead>
                         <tbody >
-                            {services.map(item => (
+                            {filteredData.map(item => (
                                 <tr key={item._id}>
-                                    <td className="border px-4 py-2"><img className='w-[100px]' src={`http://localhost:8080/public/images/${item.image}`} alt="" /></td>
+                                    <td className="border px-4 py-2"><img className='w-[100px]' src={`${BASE_URL}/public/images/${item.image}`} alt="" /></td>
                                     <td className="border px-4 py-2">{item.servicename}</td>
                                     <td className="border px-4 py-2">{item.category}</td>
 

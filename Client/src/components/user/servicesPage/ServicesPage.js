@@ -1,11 +1,11 @@
 import React from 'react'
-import ServiceCategCard from '../categorycards/categoryfilter'
+import ServiceCard from '../ServiceCard/ServiceCard';
 import CategorySlider from '../Categorylist'
 function ServicesPage() {
     return (
         <>
             <CategorySlider />
-            <ServiceCategCard />
+            <ServiceCard />
         </>
     )
 }

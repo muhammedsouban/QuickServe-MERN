@@ -1,16 +1,17 @@
+import BASE_URL from "./config/config";
 
 import Axios from "axios";
 
 const Axiosuser = Axios.create({
-    baseURL: "http://localhost:8080/",
+    baseURL: BASE_URL,
 });
 
 const Axiosadmin = Axios.create({
-    baseURL: "http://localhost:8080/admin/",
+    baseURL: `${BASE_URL}/admin/`,
 });
 
 const AxiosProvider = Axios.create({
-    baseURL: "http://localhost:8080/provider/"
+    baseURL: `${BASE_URL}/provider/`
 })
 
 export { Axiosuser, Axiosadmin, AxiosProvider };

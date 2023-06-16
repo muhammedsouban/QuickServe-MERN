@@ -5,8 +5,9 @@ import io from 'socket.io-client';
 import Sidebar from './chatSidebar';
 import { IoSendSharp } from 'react-icons/io5';
 import { getChat, getConversation, sendMessage } from '../../../Api/AdminAPI';
+import BASE_URL from '../../../config/config';
 
-const socket = io('http://localhost:8080');
+const socket = io(BASE_URL);
 
 const AdminChat = () => {
   const [users, setUsers] = useState([]);

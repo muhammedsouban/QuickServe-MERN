@@ -11,9 +11,8 @@ function DeleteCity({ open, cityId }) {
     const Delete = () => {
         const res = deleteCity(cityId, headers)
         if (res) {
-            open(false);
             toast.success('city deleted successfully')
-            window.location.reload()
+            open(false);
         }
     };
 

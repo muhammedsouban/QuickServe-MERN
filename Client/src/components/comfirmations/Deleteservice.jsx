@@ -11,7 +11,6 @@ function Deleteservice({open,serviceId}) {
         deleteService(serviceId,headers).then((data)=>{
             if (data) {
                 open(false);
-                window.location.reload()
             }
         })
     };

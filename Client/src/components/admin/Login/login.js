@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { validateEmail } from '../../../validateForm';
-
+import BASE_URL from '../../../config/config';
 import { useState } from 'react';
 import './login.css'
 
@@ -23,10 +23,10 @@ function AdminLogin() {
     }
     try {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      const response = await axios.post(`http://localhost:8080/admin/login`, { email, password }, { headers });
+      const response = await axios.post(`${BASE_URL}/admin/login`, { email, password }, { headers });
       if (response.data && response.data.email) {
         localStorage.setItem('token', response.data.token);
-        navigate('/admin/adminHome');
+        navigate('/admin');
       } else {
         toast.error(response.data.message);
       }

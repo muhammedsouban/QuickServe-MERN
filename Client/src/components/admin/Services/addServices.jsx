@@ -51,7 +51,7 @@ const AddServiceModel = ({ onClose }) => {
       const headers = { Authorization: `Bearer ${localStorage.getItem('token')}` };
       AddService(formData, headers).then((data) => {
         if (data) {
-          window.location.reload();
+          onClose();
         } else {
           alert(data.message);
         }

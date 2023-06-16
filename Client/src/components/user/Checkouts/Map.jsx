@@ -113,13 +113,17 @@ const Map = ({ address, map }) => {
 
     return (
         <div>
-            <div className="center bg-white max-w-[600px] sm:w-1/2 z-50">
+           <div className='flex justify-center items-center absolute left-0 right-0 bottom-0 top-0'>
+          <div className="  bg-[#E8F5FF] max-w-[600px] rounded-lg shadow-lg">
                 <div className="grid lg:grid-cols-2 sm:grid-cols-1">
                     <div className="h-full relative">
                         <button className="absolute left-3 top-3 z-20" onClick={handleGoBack}>
                             <BiArrowBack size={20} />
                         </button>
-                        <div className="h-full relative z-10">
+                            <h1 className="text-2xl flex sm:hidden justify-center items-center mt-2 text-center">Add Address</h1>
+                            <div></div>
+
+                        <div className="h-full sm:flex hidden relative z-10">
                             {position && (
                                 <MapContainer center={position} zoom={13} zoomControl={false} className="w-full h-full rounded-s-xl">
                                     <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -198,6 +202,8 @@ const Map = ({ address, map }) => {
                 </div>
             </div>
         </div>
+        </div>
+
     );
 };
 

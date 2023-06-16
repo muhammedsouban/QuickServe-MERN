@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 const booking = new mongoose.Schema({
+    BookingID: {
+        type: String,
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -13,6 +16,13 @@ const booking = new mongoose.Schema({
             },
             quantity: {
                 type: Number,
+            },
+            providerId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Provider',
+            },
+            status: {
+                type: String,
             },
         },
     ],

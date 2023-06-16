@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { BiArrowBack, BiCamera } from 'react-icons/bi';
 import './register.css';
 import { getCategories } from '../../Api/AdminAPI';
+import BASE_URL from '../../config/config';
 
 const ProviderRegister = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -66,7 +67,7 @@ const ProviderRegister = ({ onClose }) => {
       formData.append('password', provider.password);
 
 
-      const response = await axios.post('http://localhost:8080/provider/register', formData);
+      const response = await axios.post(`${BASE_URL}/provider/register`, formData);
 
       if (response.data.email) {
         window.location.reload();

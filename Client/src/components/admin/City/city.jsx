@@ -16,7 +16,7 @@ function City() {
         getCity().then((res) => {
             setCity(res.data)
         })
-    }, [])
+    }, [showAddModal,showDeleteModal])
 
     const toggleModal = () => {
         setShowAddModal(!showAddModal)
