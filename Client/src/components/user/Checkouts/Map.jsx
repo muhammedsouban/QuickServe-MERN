@@ -148,11 +148,11 @@ const Map = ({ address, map }) => {
                             </button>
                         </div>
                         {suggestions.length > 0 && (
-                            <div className="bg-white border border-gray-300 p-2 rounded-lg absolute left-1/2 transform -translate-x-1/2 w-full max-h-40 overflow-y-auto z-30 mt-2">
+                            <div className="bg-white border min-w-[300px] max-w-[400px] border-gray-300 p-2 rounded-lg absolute left-1/2 transform -translate-x-1/2 w-full max-h-60 overflow-y-auto z-30 mt-2">
                                 {suggestions.map((suggestion) => (
                                     <div
                                         key={suggestion.place_id}
-                                        className="cursor-pointer py-1 px-2 hover:bg-gray-100"
+                                        className="cursor-pointer py-  px-2 hover:bg-gray-100"
                                         onClick={() => handleSuggestionClick(suggestion)}
                                     >
                                         {suggestion.display_name}

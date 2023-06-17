@@ -110,8 +110,11 @@ const AdminChat = () => {
               </form>
             </div>
           ) : (
-            <div className="w-3/4 flex items-center justify-center">
-              Please select a user to start the chat
+            <div className="w-3/4 flex  items-center justify-center">
+              <p className='text-2xl'>
+
+                Please select a user to start the chat
+              </p>
             </div>
           )}
         </div>

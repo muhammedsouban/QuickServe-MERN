@@ -35,7 +35,6 @@ export const registerProvider = async (req, res) => {
             });
             const ProviderData = await provider.save();
             res.json(ProviderData);
-            console.log(ProviderData);
         } else {
             res.json({ message: "Email already taken" });
         }
@@ -49,7 +48,6 @@ export const providerLogin = async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
         const provider = await Provider.findOne({ email: email });
-        console.log(req.body);
         if (provider) {
             if (!provider.isApproved) {
                 return res.json({ message: "Account not approved. Please contact the administrator." });

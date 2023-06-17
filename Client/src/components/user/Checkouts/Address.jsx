@@ -3,11 +3,16 @@ import { BiArrowBack } from 'react-icons/bi';
 import toast from 'react-hot-toast';
 import { deleteAddress, getAddress } from '../../../Api/userAPI';
 import { MdDeleteOutline } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import { getCity } from '../../../Api/AdminAPI';
 
 const Address = ({ onClose, shedule, map, onSelectAddress }) => {
     const [address, setAddress] = useState([]);
+    const [city, setCity] = useState([]);
+
     const [selectedAddress, setSelectedAddress] = useState([]);
     const [isUpdated, setIsUpdated] = useState(false)
+
     const headers = { Authorization: `Bearer ${localStorage.getItem('userToken')}` };
 
     const handleGoBack = () => {
@@ -21,13 +26,20 @@ const Address = ({ onClose, shedule, map, onSelectAddress }) => {
     const proceed = () => {
         const selected = address.find((addr) => addr.id === selectedAddress);
         if (selected) {
-            onSelectAddress(selectAddress);
-            shedule();
-            onClose();
+            const selectedCity = city.find((city) =>
+                selected.address.includes(city.cityName)
+            ); if (selectedCity) {
+                onSelectAddress(selectAddress);
+                shedule();
+                onClose();
+            } else {
+                toast.error('Service not available at selected address.');
+            }
         } else {
             toast.error('Please select an address.');
         }
     };
+
 
     const addAddress = () => {
         map();
@@ -44,6 +56,10 @@ const Address = ({ onClose, shedule, map, onSelectAddress }) => {
             getAddress(headers).then((res) => {
                 setAddress(res.data);
             });
+            getCity().then((res) => {
+                setCity(res.data)
+                console.log(res.data);
+            })
         } catch (error) {
             console.log(error);
         }

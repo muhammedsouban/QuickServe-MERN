@@ -10,7 +10,6 @@ const userSlice = createSlice({
   reducers: {
     userData: (state, action) => {
       const { field, value } = action.payload;
-      console.log(action);
       state[field] = value;
     },
     resetUserState: () => initialState

@@ -1,6 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import ProviderNavbar from "../components/Provider/Navbar";
-import Sidebar from "../components/Provider/sidebar";
 import ProviderDashboard from "../components/Provider/dashboard";
 import Profile from "../components/Provider/Profile/Profile";
 import Requests from "../components/Provider/Bookings/Requests";
@@ -9,6 +8,8 @@ import Completed from "../components/Provider/Bookings/Completed";
 import ProviderLanding from "../components/Provider/home";
 import ProviderLogin from "../components/Provider/login";
 import ProviderAuth from "../Auth/providerAuth";
+import Error from "../components/404/404";
+
 function ProviderRoute() {
     const location = useLocation();
     const excludeNavbarRoutes = ["/provider/login", "/provider/register"];
@@ -28,6 +29,8 @@ function ProviderRoute() {
                     <Route path="/upcoming" element={<Upcoming />} />
                     <Route path="/completed" element={<Completed />} />
                     </Route>
+                    <Route path="/*" element={<Error />} />
+                    
                 </Routes>
             </div>
         </>

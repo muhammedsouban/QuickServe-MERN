@@ -7,6 +7,7 @@ import { RiDashboardFill } from 'react-icons/ri';
 import { GoFileMedia } from 'react-icons/go';
 import { AiOutlineCalendar } from 'react-icons/ai';
 import { GiModernCity } from 'react-icons/gi'
+import { BiChat } from 'react-icons/bi';
 
 const AdminNavbar = () => {
   const [nav, setNav] = useState(false);
@@ -109,7 +110,12 @@ const AdminNavbar = () => {
                 City
               </li>
             </NavLink>
-
+            <NavLink to={'/admin/chat'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
+              <li className='text-xl py-4 flex'>
+                <BiChat size={25} className='mr-4 ml-4' />
+                Support
+              </li>
+            </NavLink>
             <li onClick={Logout} className='text-xl py-4 flex cursor-pointer'>
               <MdOutlineLogout size={25} className='mr-4 ml-4' />
               Logout

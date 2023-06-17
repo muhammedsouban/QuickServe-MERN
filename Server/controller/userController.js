@@ -9,13 +9,7 @@ import Message from "../models/messageMode.js";
 import Media from "../models/mediaModel.js"
 import Review from "../models/reviewModel.js";
 import Service from '../models/serviceModel.js'
-export const login = async () => {
-    try {
-        console.log("logged in");
-    } catch (error) {
-        console.log(error);
-    }
-}
+
 
 const securePassword = async (password) => {
     try {
@@ -115,7 +109,6 @@ export const Profile = async (req, res) => {
 
 export const UpdateProfile = async (req, res) => {
     try {
-        console.log(req.file);
         const id = req.decode.id;
         const { username, email, mobile } = req.body;
         const updateData = {
@@ -205,7 +198,6 @@ export const RemoveCart = async (req, res) => {
 
 export const addAddress = async (req, res) => {
     try {
-        console.log(req.body);
         const id = new mongoose.Types.ObjectId(req.user.id);
         const addressId = new mongoose.Types.ObjectId();
         const newAddress = { ...req.body, id: addressId };
@@ -223,7 +215,6 @@ export const addAddress = async (req, res) => {
 };
 export const DeleteAddress = async (req, res) => {
     try {
-        console.log('helo');
         const userId = new mongoose.Types.ObjectId(req.user.id);
 
         const userData = await User.findByIdAndUpdate({ _id: userId }, {
@@ -266,7 +257,6 @@ export const AddBooking = async (req, res) => {
     try {
 
         const data = req.body
-        console.log(data);
         const bookingId = generateBookingId();
         const newBooking = new Booking({
             BookingID: bookingId,
@@ -473,7 +463,6 @@ export const getReview = async (req, res) => {
             }
         ]);
 
-        console.log(Reviews);
         res.status(200).json(Reviews);
     } catch (error) {
         console.log(error);

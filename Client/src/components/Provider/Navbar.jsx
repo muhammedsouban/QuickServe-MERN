@@ -89,12 +89,12 @@ const ProviderNavbar = () => {
               Completed
             </li>
           </NavLink>
-          <NavLink to={'/provider/notification'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
+          {/* <NavLink to={'/provider/notification'} onFocus={handleNavLinkFocus} onBlur={handleNavLinkBlur} onClick={closeSidebar}>
             <li className='text-xl py-4 flex'>
               <MdNotificationsActive size={25} className='mr-4 ml-4' />
               Notifications
             </li>
-          </NavLink>
+          </NavLink> */}
             <li onClick={Logout} className='text-xl py-4 flex'>
               <MdOutlineLogout size={25} className='mr-4 ml-4' />
               Logout

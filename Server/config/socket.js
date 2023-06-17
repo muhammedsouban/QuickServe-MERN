@@ -18,7 +18,6 @@ export default function initializeSocket(server) {
     })
   
     socket.on('join chat', (room) => {
-      console.log('room'+ room)
       socket.join(room)
     })
   

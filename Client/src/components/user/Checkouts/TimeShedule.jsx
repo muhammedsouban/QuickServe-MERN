@@ -4,7 +4,7 @@ import { BsChevronRight } from 'react-icons/bs';
 import { isSameDay } from 'date-fns';
 import toast from 'react-hot-toast';
 
-const TimeShedule = ({ onClose, modal, payment, onTimeSelection, selectedAddress,action }) => {
+const TimeShedule = ({ onClose, modal, payment, onTimeSelection, selectedAddress, action }) => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [address, setAddress] = useState('');
@@ -25,13 +25,20 @@ const TimeShedule = ({ onClose, modal, payment, onTimeSelection, selectedAddress
   };
 
   const handleProceedToPayment = () => {
-    if (selectedDate && selectedTime && address) {
+    if (selectedDate && selectedTime && address.length > 0 && address !=='') {
       payment();
-      onTimeSelection(selectedDate, selectedTime)
+      onTimeSelection(selectedDate, selectedTime);
     } else {
-      toast.error('Please select a date and time.');
+  if (!selectedDate) {
+        toast.error('Please select a date.');
+      } else if (!selectedTime) {
+        toast.error('Please select a time.');
+      }
+      toast.error('Please select an address.');
+
     }
   };
+
 
   const handleDateSelection = (date) => {
     setSelectedDate(date);
@@ -98,45 +105,45 @@ const TimeShedule = ({ onClose, modal, payment, onTimeSelection, selectedAddress
 
   return (
     <div>
-     <div className='flex justify-center items-center absolute left-0 right-0 bottom-0 top-0'>
-          <div className="  bg-[#E8F5FF]  px-6 py-4 rounded-lg shadow-lg">
-        <div className="flex justify-between">
-          <button className="top-0 relative left-5" onClick={handleGoBack}>
-            <BiArrowBack size={20} />
-          </button>
-          <h1 className="text-2xl text-center">Schedule Professionals</h1>
-          <div></div>
-        </div>
+      <div className='flex justify-center items-center absolute left-0 right-0 bottom-0 top-0'>
+        <div className="  bg-[#E8F5FF]  px-6 py-4 rounded-lg shadow-lg">
+          <div className="flex justify-between">
+            <button className="top-0 relative left-5" onClick={handleGoBack}>
+              <BiArrowBack size={20} />
+            </button>
+            <h1 className="text-2xl text-center">Schedule Professionals</h1>
+            <div></div>
+          </div>
 
-        <div onClick={handleAddress} className="flex justify-center py-4">
-          <div style={{ background: '#C2EDFF' }} className="relative h-10 w-full mx-8">
-            <h2 className="p-2.5 max-w-[320px] overflow-hidden truncate">
-            {address && address.length > 0 ? address : 'No address selected'} </h2>
-            <BsChevronRight size={20} className="absolute right-2 top-2.5" />
+          <div onClick={handleAddress} className="flex justify-center py-4">
+            <div style={{ background: '#C2EDFF' }} className="relative h-10 w-full mx-8">
+              <h2 className="p-2.5 max-w-[320px] overflow-hidden truncate">
+                {address && address.length > 0 ? address : 'No address selected'} </h2>
+              <BsChevronRight size={20} className="absolute right-2 top-2.5" />
+            </div>
+          </div>
+          <div className="grid ms-8 gap-x-0 grid-cols-3">
+            {renderDates()}
+          </div>
+          <div className="text-start ms-8 py-5">
+            <h2 className="font-semibold">Select start time</h2>
+            <span className="text-xs">Your service will take</span>
+          </div>
+
+          <div className="grid grid-cols-4 gap-2 mx-8 mb-5 text-black">
+            {renderTimes()}
+          </div>
+          <div className="flex">
+            <button
+              onClick={handleProceedToPayment}
+              type="submit"
+              className="w-full mx-8 text-white bg-blue-900 hover:bg-blue-900 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm mb-5 py-2.5 text-center"
+            >
+              PROCEED TO PAYMENT
+            </button>
           </div>
         </div>
-        <div className="grid ms-8 gap-x-0 grid-cols-3">
-          {renderDates()}
-        </div>
-        <div className="text-start ms-8 py-5">
-          <h2 className="font-semibold">Select start time</h2>
-          <span className="text-xs">Your service will take</span>
-        </div>
-
-        <div className="grid grid-cols-4 gap-2 mx-8 mb-5 text-black">
-          {renderTimes()}
-        </div>
-        <div className="flex">
-          <button
-            onClick={handleProceedToPayment}
-            type="submit"
-            className="w-full mx-8 text-white bg-blue-900 hover:bg-blue-900 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm mb-5 py-2.5 text-center"
-          >
-            PROCEED TO PAYMENT
-          </button>
-        </div>
       </div>
-    </div>
     </div>
 
   );

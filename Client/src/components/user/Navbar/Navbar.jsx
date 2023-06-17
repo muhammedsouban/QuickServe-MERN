@@ -22,7 +22,7 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const [city, setCity] = useState([]);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCity().then((res) => {
@@ -36,11 +36,12 @@ const Navbar = () => {
             .then((response) => {
               const data = response.data.address;
               const matchedCity = res.data?.find((item) => item.cityName === data.city);
-              if (matchedCity) {
-                dispatch(Location({ field: "data", value: data }));
-                dispatch(UpdateCity(data.city))
-              } else {
-                // toast.error('Sorry, the city does not match.');
+                if (matchedCity) {
+                  dispatch(Location({ field: "data", value: data }));
+                  dispatch(UpdateCity(data.city));
+                } else {
+                  dispatch(UpdateCity('we will back soon..'));
+                  dispatch(Location({ field: "data", value: ''}));
               }
             })
             .catch((error) => {
@@ -60,8 +61,8 @@ const Navbar = () => {
 
   const handleSearch = () => {
     setShowSearch(!showSearch);
-    setShowAddress(false)
   };
+
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -78,6 +79,7 @@ const Navbar = () => {
       console.error('Location is not supported by this browser.');
     }
   };
+
   const handleSelectedLocation = (selectedLocation, data) => {
     const cityItem = city.find((cityItem) =>
       selectedLocation.toLowerCase().includes(cityItem.cityName.toLowerCase())
@@ -93,7 +95,11 @@ const Navbar = () => {
       }
       toast.success(`selected : ${cityItem.cityName}`)
     } else {
+      dispatch(UpdateCity('Sorry we are not here'))
+      dispatch(Location({field:'data',value:''}))
       toast.error('Sorry, we are not in your city');
+      setShowSearch(false);
+
     }
   };
 
@@ -136,7 +142,7 @@ const Navbar = () => {
 
   const logout = () => {
     localStorage.removeItem('userToken');
-    window.location.reload();
+    navigate('/')
   };
 
   return (

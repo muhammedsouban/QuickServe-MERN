@@ -4,10 +4,13 @@ import { BiArrowBack, BiCamera } from 'react-icons/bi';
 import './register.css';
 import { getCategories } from '../../Api/AdminAPI';
 import BASE_URL from '../../config/config';
+import { toast } from 'react-hot-toast';
 
 const ProviderRegister = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [passwordError, setPasswordError] = useState('');
+
   const [Category, setCategory] = useState([])
 
   const handleImageChange = (e) => {
@@ -50,6 +53,10 @@ const ProviderRegister = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (provider.password !== provider.CPassword) {
+      setPasswordError('Passwords do not match');
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append('image', selectedImage);
@@ -70,13 +77,15 @@ const ProviderRegister = ({ onClose }) => {
       const response = await axios.post(`${BASE_URL}/provider/register`, formData);
 
       if (response.data.email) {
-        window.location.reload();
+        toast.success('Registered Successfully we will get you soon')
+        onClose()
+
       } else {
-        alert(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.log(error);
-      alert(error.response.data.message);
+      toast(error.response.data.message);
     }
   };
 
@@ -100,7 +109,7 @@ const ProviderRegister = ({ onClose }) => {
                 value={provider.username}
                 type="text"
                 name="username"
-              
+
                 className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
                 required
@@ -113,32 +122,33 @@ const ProviderRegister = ({ onClose }) => {
             </div>
             <div className="relative z-0 w-full mb-5 group">
               <input onChange={onChange} value={provider.email} type="text" name="email" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label  className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Email</label>
+              <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Email</label>
             </div>
           </div>
           <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
               <input onChange={onChange} value={provider.phone} type="text" name="phone" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label  className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Mobile No.</label>
+              <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Mobile No.</label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
               <input onChange={onChange} value={provider.location} type="text" name="location" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label  className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">District</label>
+              <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">District</label>
             </div>
-         
+
           </div>
           <div className="relative z-0 w-full mb-5 group">
             <input onChange={onChange} value={provider.address} type="text" name="address" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-            <label  className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Permenent Address</label>
+            <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Permenent Address</label>
           </div>
           <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
-              <input onChange={onChange} value={provider.password} type="password" name="password"  className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <input onChange={onChange} value={provider.password} type="password" name="password" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
               <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Password</label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
-              <input onChange={onChange} value={provider.CPassword} type="password" name="Cpassword" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
-              <label  className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Confirm password</label>
+              <input onChange={onChange} value={provider.CPassword} type="password" name="CPassword" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+              <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Confirm password</label>
+              {passwordError && <p className="text-red-500">{passwordError}</p>}
             </div>
           </div>
 
@@ -152,7 +162,7 @@ const ProviderRegister = ({ onClose }) => {
                   <option key={category} value={category}>{category}</option>
                 ))}
               </select>
-          
+
             </div>
             <div className="relative z-0 w-full group mb-4">
               <input onChange={onChange} value={provider.experience} type="text" name="experience" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />

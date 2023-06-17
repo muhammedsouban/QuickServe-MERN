@@ -17,6 +17,7 @@ function App() {
           <Route path="/admin/*" element={<AdminRoute />} />
           <Route path="/*" element={<UserRoute />} />
           <Route path="/provider/*" element={<ProviderRoute />} />
+          {/* <Route path="*" element={<Error />} /> */}
         </Routes>
       </BrowserRouter>
     </>

@@ -2,6 +2,7 @@ import './hero.css'
 
 import React from 'react'
 import BASE_URL from '../../../config/config'
+import { Link } from 'react-router-dom'
 function Hero() {
     return (
         <>
@@ -11,7 +12,9 @@ function Hero() {
                     
                 <div className="hero-text text-start">
                     <h1 >Bringing skilled Professionals To You</h1>
-                    <input type="text" placeholder='Search For Service' />
+                   <Link to={'/services'}>
+                   <button>Explore Now</button>
+                   </Link> 
                 </div>
             </div>
         </>

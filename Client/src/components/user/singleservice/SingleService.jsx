@@ -51,9 +51,9 @@ const SingleService = () => {
                 <p className="leading-relaxed">{service.description}</p>
                 <div className="flex mb-4 mt-5">
                   <span className="flex items-center">
-                  <StarIcon className="w-5 h-5 text-yellow-400" />
+                  {/* <StarIcon className="w-5 h-5 text-yellow-400" />
 
-                    <span className="text-gray-600 ml-3">4.5</span>
+                    <span className="text-gray-600 ml-3">4.5</span> */}
                   </span>
 
                 </div>

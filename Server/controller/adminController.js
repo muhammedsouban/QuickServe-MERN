@@ -33,7 +33,6 @@ export const adminLogin = async (req, res) => {
 
 export const AddService = async (req, res) => {
     try {
-        console.log(req.body);
         const { servicename, description, serviceincludes, price, category } = req.body;
         const serviceData = {
             servicename: servicename,
@@ -85,9 +84,6 @@ export const EditService = async (req, res) => {
 
 export const UpdateService = async (req, res) => {
     try {
-        console.log(req.body);
-        console.log(req.params.serviceId);
-
         const { servicename, description, serviceincludes, price, category } = req.body;
         const serviceData = {
             servicename: servicename,
@@ -125,7 +121,6 @@ export const blockProvider = async (req, res) => {
             { _id: req.params.providerId },
             { $set: { isBlock: true } })
         res.json(providerData)
-        console.log(providerData);
     } catch (error) {
         console.log(error);
     }
@@ -204,7 +199,6 @@ export const editCategory = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
     try {
-        console.log(req.body);
         const categoryData = {
             categoryName: req.body.categoryName,
         };
@@ -533,7 +527,6 @@ export const bookings = async (req, res) => {
                 }
             }
         ]).exec();
-        console.log(Bookingdata);
         res.json(Bookingdata)
     } catch (error) {
         console.log(error);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StarIcon, HeartIcon } from '@heroicons/react/solid';
 // import { getServicesbycategory } from '../../Api/AdminAPI';
 import { getServices } from '../../../Api/AdminAPI';
-import {addToCart } from '../../../Api/userAPI';
+import { addToCart } from '../../../Api/userAPI';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -19,6 +19,7 @@ const ServiceCard = () => {
   const [showModal, setShowModal] = useState(false)
 
   const handleAddToCart = (serviceId) => {
+
     if (headers.Authorization !== 'Bearer null') {
       addToCart(serviceId, headers).then((res) => {
         if (res.data) {
@@ -63,10 +64,10 @@ const ServiceCard = () => {
             <div className="w-72 bg-white shadow-lg rounded-lg overflow-hidden" key={service._id}>
               <Link to={`/service/${service._id}`}>
                 <div className="relative">
-                  <div className="absolute top-0 right-0 px-1 bg-white rounded flex mt-2 me-2 items-center">
+                  {/* <div className="absolute top-0 right-0 px-1 bg-white rounded flex mt-2 me-2 items-center">
                     <StarIcon className="w-5 h-5 text-yellow-400" />
-                    <span className="text-gray-600 ml-1">4</span>  {/* Service ratings added here */}
-                  </div>
+                    <span className="text-gray-600 ml-1">4</span> 
+                  </div> */}
                   <img
                     src={`${BASE_URL}/public/images/${service.image}`}
                     alt="Service "

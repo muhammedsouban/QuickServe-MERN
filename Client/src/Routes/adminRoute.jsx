@@ -36,6 +36,8 @@ function AdminRoute() {
             <Route path="/bookings" element={<Bookings />} />
             <Route path="/chat" element={<AdminChat />} />
           </Route>
+          <Route path="/*" element={<Error />} />
+
         </Routes>
       </div>
     </>
