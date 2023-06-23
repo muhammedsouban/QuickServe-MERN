@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { BiArrowBack } from 'react-icons/bi';
+import React, { useEffect, useRef, useState } from 'react';
+import { BiArrowBack, BiSupport } from 'react-icons/bi';
 import { IoSendSharp } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import io from 'socket.io-client';
 import { getChat, sendMessage, startConversation } from '../../../Api/userAPI';
 import BASE_URL from '../../../config/config';
+import { FaUserCircle } from 'react-icons/fa';
 
 function Chat({ action }) {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
   const [conversationId, setConversationId] = useState(null);
   const [socket, setSocket] = useState(null);
+  const messagesContainerRef = useRef(null);
 
   const user = useSelector((state) => state.user.data._id);
   const headers = { Authorization: `Bearer ${localStorage.getItem('userToken')}` };
@@ -25,7 +27,7 @@ function Chat({ action }) {
       setMessages(res.data.messages);
       newSocket.emit('join chat', res.data._id);
     });
-
+   
     return () => {
       newSocket.disconnect();
     };
@@ -44,7 +46,17 @@ function Chat({ action }) {
 
       });
     }
+    scrollToLatestMessage();
   }, [socket, messages]);
+
+  const scrollToLatestMessage = () => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  };
 
   const handleStartChat = () => {
     startConversation(user, headers)
@@ -73,7 +85,7 @@ function Chat({ action }) {
   return (
     <>
       <div className="flex justify-center items-center fixed right-8 bottom-28 z-50 ">
-        <div className="bg-[#E8F5FF] rounded-lg shadow-lg">
+        <div className="bg-[#E8F5FF] min-w-[300px] rounded-lg shadow-lg">
           <div className="flex justify-between bg-white rounded-t-lg py-2">
             <button onClick={(() => action())} className="top-0 relative left-5">
               <BiArrowBack size={20} />
@@ -85,7 +97,7 @@ function Chat({ action }) {
             <div></div>
           </div>
           <div className="mx-5">
-            <div className="w-full px-2 flex flex-col justify-between overflow-auto scrollbar-thin">
+            <div className="w-full px-2 flex flex-col justify-between overflow-auto scrollbar-thin" ref={messagesContainerRef}>
               <div className="flex flex-col mt-5 h-96">
                 {conversationId ? (
                   <>
@@ -107,17 +119,13 @@ function Chat({ action }) {
                             } mb-4`}
                         >
                           {message.sender === user ? (
-                            <img
-                              src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                              className="object-cover h-8 w-8 rounded-full"
-                              alt=""
-                            />
+                            <FaUserCircle size={32} color='#0D47A1'/>
                           ) : (
                             <img
-                              src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                              className="object-cover h-8 w-8 rounded-full"
-                              alt=""
-                            />
+                            src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                            className="object-cover h-8 w-8 rounded-full"
+                            alt=""
+                          />
                           )}
 
                           <div

@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { BiArrowBack, BiCamera } from 'react-icons/bi';
 import './register.css';
-import { getCategories } from '../../Api/AdminAPI';
-import BASE_URL from '../../config/config';
+import { getCategories, getCity } from '../../Api/AdminAPI';
 import { toast } from 'react-hot-toast';
+import { Register } from '../../Api/providerAPI';
 
 const ProviderRegister = ({ onClose }) => {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -12,6 +12,7 @@ const ProviderRegister = ({ onClose }) => {
   const [passwordError, setPasswordError] = useState('');
 
   const [Category, setCategory] = useState([])
+  const [city, setCity] = useState([])
 
   const handleImageChange = (e) => {
     const image = e.target.files[0];
@@ -25,6 +26,11 @@ const ProviderRegister = ({ onClose }) => {
       })
       .catch((error) => {
         console.error("Error fetching categories:", error);
+      });
+    getCity()
+      .then((res) => setCity(res.data))
+      .catch((error) => {
+        console.error("Error fetching Cities:", error);
       });
   }, []);
   const [provider, setProvider] = useState({
@@ -73,16 +79,15 @@ const ProviderRegister = ({ onClose }) => {
       formData.append('description', provider.description);
       formData.append('password', provider.password);
 
+      await Register(formData).then((res) => {
+        if (res.data.email) {
+          toast.success('Registered Successfully we will get you soon')
+          onClose()
+        } else {
+          toast.error(res.data.message);
+        }
+      })
 
-      const response = await axios.post(`${BASE_URL}/provider/register`, formData);
-
-      if (response.data.email) {
-        toast.success('Registered Successfully we will get you soon')
-        onClose()
-
-      } else {
-        toast.error(response.data.message);
-      }
     } catch (error) {
       console.log(error);
       toast(error.response.data.message);
@@ -112,6 +117,8 @@ const ProviderRegister = ({ onClose }) => {
 
                 className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
+                pattern="^(?!\\s)[^\s]+$"
+                title='Please enter a valid username'
                 required
               />
               <label
@@ -121,18 +128,25 @@ const ProviderRegister = ({ onClose }) => {
               </label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
-              <input onChange={onChange} value={provider.email} type="text" name="email" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <input onChange={onChange} value={provider.email} type="email" name="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+                title="Please enter a valid email address" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
               <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Email</label>
             </div>
           </div>
           <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
-              <input onChange={onChange} value={provider.phone} type="text" name="phone" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <input onChange={onChange} value={provider.phone} pattern="[0-9]{10}"
+                title="Please enter a 10-digit number"
+                type="text" name="phone" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
               <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Mobile No.</label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
-              <input onChange={onChange} value={provider.location} type="text" name="location" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
-              <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">District</label>
+              <select onChange={onChange} value={provider.location} name="location" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
+                <option value="">Choose City</option>
+                {city?.map((item) => (
+                  <option key={item._id} value={item.cityName}>{item.cityName}</option>
+                ))}
+              </select>
             </div>
 
           </div>
@@ -142,7 +156,7 @@ const ProviderRegister = ({ onClose }) => {
           </div>
           <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
-              <input onChange={onChange} value={provider.password} type="password" name="password" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
+              <input onChange={onChange} value={provider.password} minLength={6} type="password" name="password" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " required />
               <label className="peer-focus:font-medium absolute text-sm text-gray-500  duration-300 transform -translate-y-6 scale-85 top-3 z-10 ms-2 origin-[0] peer-focus:left-0 peer-focus:text-blue-600  peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-85 peer-focus:-translate-y-6">Password</label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
@@ -158,7 +172,7 @@ const ProviderRegister = ({ onClose }) => {
             <div className="relative z-0 w-full group mb-4">
               <select onChange={onChange} value={provider.category} name="category" className="block py-2.5 px-2 w-full text-sm text-gray-900 bg-white rounded border-gray-300 appearance-none    focus:outline-none focus:ring-0 focus:border-blue-600 peer" required>
                 <option value="">Choose Category</option>
-                {Category.map((category) => (
+                {Category?.map((category) => (
                   <option key={category} value={category}>{category}</option>
                 ))}
               </select>
